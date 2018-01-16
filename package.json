@@ -1,9 +1,9 @@
 {
   "name": "youlikeapp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Plastiquewind/youlike.git"
+    "url": "https://github.com/youlikeapp/youlikeapp.github.io"
   },
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile --NODE_ENV=production",

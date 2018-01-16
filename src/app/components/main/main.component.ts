@@ -120,6 +120,7 @@ class MainController implements ng.IComponentController {
 
     public loadList(): void {
         this.videosList = localStorage.videosList;
+        this.videosListIsEmpty = false;
     }
 
     private onListFocus(): void {
