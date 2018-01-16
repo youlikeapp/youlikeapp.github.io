@@ -14,7 +14,7 @@ export class YouTubeService {
 
         gapi.load("client:auth2", () => {
             gapi.client.init({
-                clientId: "871050293069-71089o7apbqnuh7uj0op686mhilrlflt.apps.googleusercontent.com",
+                clientId: "871050293069-eqou5jodn7u9tahldd0jqdhu10mlk13f.apps.googleusercontent.com",
                 scope: "https://www.googleapis.com/auth/youtube"
             }).then(() => {
                 this.googleAuth = gapi.auth2.getAuthInstance();
