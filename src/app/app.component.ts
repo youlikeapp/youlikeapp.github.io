@@ -32,6 +32,10 @@ export class AppController implements ng.IComponentController {
     }
 
     public openMenu(): void {
-        this.$mdSidenav("left").toggle();
+        this.$mdSidenav("left").open();
+    }
+
+    public closeMenu(): void {
+        this.$mdSidenav("left").close();
     }
 }
