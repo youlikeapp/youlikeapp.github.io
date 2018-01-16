@@ -1,0 +1,20 @@
+@import "~angular-material/angular-material.min.css";
+@import "~angular-block-ui/dist/angular-block-ui.min.css";
+@import "~toastr/build/toastr.min.css";
+
+html, body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #212121;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.md-button {    
+  text-transform: none !important;
+}
+
+ui-view {
+  min-height: 100vh;
+}

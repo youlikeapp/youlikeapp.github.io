@@ -1,0 +1,7 @@
+<md-list>
+    <md-list-item ng-repeat="page in $ctrl.pages" ui-sref="{{page.state}}">
+        <md-icon class="material-icons">{{ page.icon }}</md-icon>
+        {{ page.label }}
+        <span flex></span>
+    </md-list-item>
+</md-list>

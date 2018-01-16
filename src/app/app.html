@@ -1,0 +1,23 @@
+<div layout="row">
+    <md-sidenav
+        layout="column"
+        class="md-sidenav-left"
+        md-component-id="left"
+        md-is-locked-open="$mdMedia('gt-md')"
+        md-whiteframe="4">
+
+      <md-toolbar layout-align="center center" class="md-toolbar-tools md-accent">
+        <youtube-account></youtube-account>
+      </md-toolbar>
+      <nav></nav>
+    </md-sidenav>
+    <div layout="column" flex>
+        <md-toolbar class="md-toolbar-tools md-accent">
+            <md-button class="md-icon-button" ng-click="$ctrl.openMenu()"
+             hide-gt-md>
+                <md-icon class="material-icons">&#xE5D2;</md-icon>
+            </md-button>
+        </md-toolbar>
+        <ui-view></ui-view>
+    </div>
+</div>
