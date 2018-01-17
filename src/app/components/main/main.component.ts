@@ -99,7 +99,7 @@ class MainController implements ng.IComponentController {
     }
 
     public saveList(): void {
-        localStorage.videosList = this.videosList;
+        localStorage.videosList = JSON.stringify(this.videosList.split("\n"));
 
         toastr.success("Список видео сохранён.");
     }
@@ -119,7 +119,7 @@ class MainController implements ng.IComponentController {
     }
 
     public loadList(): void {
-        this.videosList = localStorage.videosList;
+        this.videosList = (<string[]>JSON.parse(localStorage.videosList)).join("\n");
         this.videosListIsEmpty = false;
     }
 

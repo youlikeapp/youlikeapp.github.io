@@ -1,13 +1,13 @@
 {
   "name": "youlikeapp",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/youlikeapp/youlikeapp.github.io"
   },
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile --NODE_ENV=production",
-    "server": "webpack-dev-server --history-api-fallback --inline --hot --progress --NODE_ENV=dev",
+    "server": "webpack-dev-server --https --history-api-fallback --inline --hot --progress --NODE_ENV=dev",
     "start": "npm run server"
   },
   "devDependencies": {
@@ -17,6 +17,7 @@
     "@types/angular-cookies": "1.4.2",
     "@types/angular-material": "1.1.39",
     "@types/angular-resource": "1.5.6",
+    "@types/cross-storage": "^0.8.29",
     "@types/es6-promise": "0.0.32",
     "@types/gapi.auth2": "0.0.46",
     "@types/gapi.client.youtube": "^3.0.0",
@@ -59,6 +60,7 @@
     "angular-sanitize": "1.5.8",
     "angular-socialshare": "^2.3.11",
     "angular-ui-router": "1.0.0-beta.3",
+    "cross-storage": "^1.0.0",
     "moment": "^2.20.1",
     "query-string": "^5.0.1",
     "toastr": "^2.1.4",
