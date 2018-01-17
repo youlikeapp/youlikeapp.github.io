@@ -41,7 +41,7 @@ class MainController implements ng.IComponentController {
 
     // tslint:disable-next-line:no-empty
     $onInit(): void {
-        this.videosList = JSON.parse(localStorage.videosList).join("\n");
+        this.videosList = localStorage.videosList ? JSON.parse(localStorage.videosList).join("\n") : undefined;
         this.videosListIsEmpty = !this.videosList || this.videosList.length === 0;
 
         if (this.videosListIsEmpty) {

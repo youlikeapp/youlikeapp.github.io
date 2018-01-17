@@ -1,5 +1,4 @@
 import * as angular from "angular";
-import { CrossStorageHub, CrossStorageClient } from "cross-storage";
 import { State, StateProvider, Ng1StateDeclaration } from "angular-ui-router";
 import { MainComponent } from "./main.component";
 import { NavService, NavItem } from "./../../common/nav/nav.service";
@@ -24,12 +23,6 @@ function runConfig(NavService: NavService): void {
     };
 
     NavService.addNavItem(page);
-    CrossStorageHub.init([
-        {
-            origin: /.*/,
-            allow: [ "get", "set", "del" ]
-        }
-    ]);
 }
 
 const Main: ng.IModule = angular
