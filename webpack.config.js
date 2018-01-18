@@ -104,7 +104,7 @@ module.exports = (function makeWebpackConfig() {
             template: getPath('./src/hub/hub.html'),
             filename: getPath('./hub.html'),
             inject: 'head',
-            chunks: [ "hub" ]
+            excludeChunks: [ "app" ]
         }),
 
         new CheckerPlugin()
