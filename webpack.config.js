@@ -19,8 +19,7 @@ module.exports = (function makeWebpackConfig() {
 
     config.entry = {
         'app': './src/app/index.ts',
-        'vendor': './src/app/vendor.ts',
-        'hub': './src/hub/hub.ts'
+        'vendor': './src/app/vendor.ts'
     };
 
     config.output = {
@@ -42,8 +41,7 @@ module.exports = (function makeWebpackConfig() {
                 test: /\.ts$/,
                 loader: 'ng-annotate!awesome-typescript-loader',
                 include: [
-                    getPath("src/app"),
-                    getPath("src/hub")
+                    getPath("src/app")
                 ]
             },
             {
@@ -51,8 +49,7 @@ module.exports = (function makeWebpackConfig() {
                 test: /\.js$/,
                 loader: 'babel',
                 include: [
-                    getPath("src/app"),
-                    getPath("src/hub")
+                    getPath("src/app")
                 ]
             },
             {
@@ -96,15 +93,7 @@ module.exports = (function makeWebpackConfig() {
 
         new HtmlWebpackPlugin({
             template: getPath('./src/index.html'),
-            inject: 'body',
-            excludeChunks: [ "hub" ]
-        }),
-
-        new HtmlWebpackPlugin({
-            template: getPath('./src/hub/hub.html'),
-            filename: getPath('./hub.html'),
-            inject: 'head',
-            excludeChunks: [ "app" ]
+            inject: 'body'
         }),
 
         new CheckerPlugin()
