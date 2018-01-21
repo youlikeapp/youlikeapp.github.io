@@ -36,17 +36,20 @@ class MainController implements ng.IComponentController {
     }
 
     public get hasVideosInStorage(): boolean {
-        return localStorage.videosList !== undefined;
+        return localStorage.videosList !== undefined &&
+            localStorage.videosList !== null &&
+            localStorage.videosList.length > 0;
     }
 
-    // tslint:disable-next-line:no-empty
     $onInit(): void {
-        this.videosList = localStorage.videosList ? JSON.parse(localStorage.videosList).join("\n") : undefined;
-        this.videosListIsEmpty = !this.videosList || this.videosList.length === 0;
+        this.$scope.$watch(() => localStorage.videosList, () => {
+            this.videosList = localStorage.videosList ? JSON.parse(localStorage.videosList).join("\n") : undefined;
+            this.videosListIsEmpty = !this.videosList || this.videosList.length === 0;
 
-        if (this.videosListIsEmpty) {
-            this.videosList = this.listPlaceholder;
-        }
+            if (this.videosListIsEmpty) {
+                this.videosList = this.listPlaceholder;
+            }
+        });
     }
 
     public checkVideos(): void {
@@ -154,5 +157,9 @@ class MainController implements ng.IComponentController {
         this.$location.hash(this.bottomId);
 
         this.$anchorScroll();
+    }
+
+    private forceUpdate(): void {
+        this.$scope.$eval();
     }
 }
