@@ -38,7 +38,7 @@ class AboutController implements ng.IComponentController {
         {
             provider: "google",
             icon: "google-plus",
-            title: "Google +"
+            title: "Google+"
         },
         {
             provider: "telegram",

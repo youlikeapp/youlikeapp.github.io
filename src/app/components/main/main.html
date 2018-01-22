@@ -5,7 +5,7 @@
 			<md-content flex="70" flex-xs="100">
 				<md-input-container class="md-block">
 					<label>Список видео (идентификаторы или полные ссылки)</label>
-					<textarea required rows="12" md-no-autogrow
+					<textarea id="videosListTextArea" required rows="12" md-no-autogrow
 					ng-class = "$ctrl.videosListIsEmpty && 'list-empty'"
 					ng-model="$ctrl.videosList" ng-focus="$ctrl.onListFocus()" ng-blur="$ctrl.onListBlur()"
 					ng-change="$ctrl.onListChange()"></textarea>
