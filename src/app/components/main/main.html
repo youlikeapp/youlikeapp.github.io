@@ -21,7 +21,7 @@
 						Загрузить
 					</md-button>
 					<md-button class="md-raised md-accent" ng-if="$ctrl.hasVideosInStorage" 
-					ng-click="$ctrl.clearList()" id="clearListBtn">
+					ng-click="$ctrl.showClearListDialog()">
 						<md-icon class="material-icons">&#xE872;</md-icon>
 						Удалить
 					</md-button>	
@@ -50,3 +50,24 @@
 	</div>
 </div>
 <input id="forceUpdate" type="hidden" ng-click="$ctrl.forceUpdate()" />
+<div class="confirm-dialog-container">
+	<div class="md-dialog-container" id="confirmDeleteDialog">
+		<md-dialog md-theme="default" aria-label="Подтверждение действия" ng-class="dialog.css" 
+			role="dialog" tabindex="-1">
+			<md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
+				<h2>Подтверждение действия</h2>
+				<div>
+					<p>Вы уверены, что хотите удалить список видео?</p>
+				</div>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary md-cancel-button" ng-click="$ctrl.closeClearListDialog()">
+					<span>Нет</span>
+				</md-button>
+				<md-button class="md-primary md-raised md-accent md-confirm-button" ng-click="$ctrl.clearList()">
+					<span>Да</span>
+				</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+	</div>
+</div>

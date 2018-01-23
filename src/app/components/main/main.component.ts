@@ -1,6 +1,6 @@
-import { YouTubeService, CheckingResult } from "../../common/youtube/youtube.service";
-import { blockUI, material } from "angular";
 import * as toastr from "toastr";
+import { blockUI, material } from "angular";
+import { YouTubeService, CheckingResult } from "../../common/youtube/youtube.service";
 
 import "./main.scss";
 
@@ -107,18 +107,22 @@ class MainController implements ng.IComponentController {
         toastr.success("Список видео сохранён.");
     }
 
-    public clearList(): void {
-        let confirm: material.IConfirmDialog = this.$mdDialog.confirm()
-            .title("Подтверждение действия")
-            .textContent("Вы уверены, что хотите удалить список видео?")
-            .ok("Да")
-            .cancel("Нет");
-
-        this.$mdDialog.show(confirm).then((value) => {
-            localStorage.removeItem("videosList");
-
-            toastr.success("Список видео удалён.");
+    public showClearListDialog(): void {
+        this.$mdDialog.show({
+            contentElement: "#confirmDeleteDialog",
+            parent: document.body
         });
+    }
+
+    public closeClearListDialog(): void {
+        this.$mdDialog.cancel();
+    }
+
+    public clearList(): void {
+        this.$mdDialog.hide();
+        localStorage.removeItem("videosList");
+
+        toastr.success("Список видео удалён.");
     }
 
     public loadList(): void {
