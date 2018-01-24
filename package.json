@@ -1,6 +1,10 @@
 {
   "name": "youlikeapp",
   "version": "1.3.4",
+  "author": {
+    "name": "Plastiquewind"
+  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/youlikeapp/youlikeapp.github.io"
