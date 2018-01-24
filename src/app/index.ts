@@ -23,7 +23,6 @@ function routeConfig(
             component: "app"
         });
 
-    $locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise("/");
 }
 
