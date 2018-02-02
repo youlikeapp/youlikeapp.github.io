@@ -1,6 +1,7 @@
 import * as queryString from "query-string";
 import * as validator from "validator";
 import * as toastr from "toastr";
+import * as _ from "lodash";
 
 export class YouTubeService {
     private googleAuth: gapi.auth2.GoogleAuth;
@@ -55,24 +56,41 @@ export class YouTubeService {
             return result;
         });
 
+        // maximum possible batch size for the request is 580.
+        let videoIdsChunks: string[][] = _.chunk(videoIds, 580);
+
         return gapi.client.load("youtube", "v3").then(() => {
-            return (<any>gapi.client).youtube.videos.getRating({
-                id: videoIds.join(",")
-            }).then((response) => response);
+            let promises: any[] = [];
+
+            videoIdsChunks.forEach((videoIdsChunk) => {
+                let promise: any = (<any>gapi.client).youtube.videos.getRating({
+                    id: videoIdsChunk.join(",")
+                });
+
+                promises.push(promise);
+            });
+
+            return Promise.all(promises);
         })
-        .then((response) => {
-            let items: gapi.client.youtube.VideoRating[] = response.result.items;
+        .then((responses) => {
             let result: CheckingResult = new CheckingResult();
             let withLikes: string[] = [];
             let withoutLikes: string[] = [];
 
-            items.forEach((item) => {
-                if (item.rating !== "like") {
-                    withoutLikes.push(item.videoId);
-                } else {
-                    withLikes.push(item.videoId);
+            for (let i: number = 0; i < (<any>responses).length; i++) {
+                const response: any = (<any>responses)[i];
+                const items: gapi.client.youtube.VideoRating[] = response.result.items;
+
+                for (let i: number = 0; i < items.length; i++) {
+                    const item: gapi.client.youtube.VideoRating = items[i];
+
+                    if (item.rating !== "like") {
+                        withoutLikes.push(item.videoId);
+                    } else {
+                        withLikes.push(item.videoId);
+                    }
                 }
-            });
+            }
 
             result.withLikes = withLikes;
             result.withoutLikes = withoutLikes;
@@ -80,7 +98,7 @@ export class YouTubeService {
             return result;
         }, (data) => {
             console.error(data);
-            toastr.error(`Не удалось проверить список видео. ${ data.result.error.message }`);
+            toastr.error(`Не удалось проверить список видео.`);
 
             return null;
         });
