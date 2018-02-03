@@ -21,7 +21,7 @@
 						Загрузить
 					</md-button>
 					<md-button class="md-raised md-accent" ng-if="$ctrl.hasVideosInStorage" 
-					ng-click="$ctrl.showClearListDialog()">
+					ng-click="$ctrl.showDialog('confirmDeleteDialog')">
 						<md-icon class="material-icons">&#xE872;</md-icon>
 						Удалить
 					</md-button>	
@@ -32,8 +32,13 @@
 				<p>Всего проверено: {{ $ctrl.lastCheckingResult.withLikes.length + $ctrl.lastCheckingResult.withoutLikes.length }}</p>
 				<p>С лайками: {{ $ctrl.lastCheckingResult.withLikes.length }}</p>
 				<p>Без лайков: {{ $ctrl.lastCheckingResult.withoutLikes.length }}</p>
-				<div layout-xs="column">
-					<md-button class="md-primary md-raised" ng-click="$ctrl.setLikes()">
+				<div ng-if="$ctrl.lastCheckingResult.withoutLikes.length > 0" layout-xs="column">
+					<md-button class="md-raised" ng-click="$ctrl.showDialog('videosWithoutLikesDialog')">
+						<md-icon class="material-icons">&#xE417;</md-icon>
+						Показать видео без лайков
+					</md-button>
+					<md-button class="md-primary md-raised"
+						ng-click="$ctrl.setLikes()">
 						<md-icon class="material-icons">&#xE8DC;</md-icon>
 						Поставить лайки
 					</md-button>	
@@ -44,13 +49,19 @@
 				<p>Проставлено: {{ $ctrl.lastSuccessedVideos.length }}</p>
 				<p>Не проставлено: {{ $ctrl.lastFailedVideos.length }}</p>
 				<p><strong>Лайки могут появиться с задержкой.</strong></p>
+				<div ng-if="$ctrl.lastFailedVideos.length > 0" layout-xs="column">
+					<md-button class="md-raised md-accent" ng-click="$ctrl.showDialog('failedVideosDialog')">
+						<md-icon class="material-icons">&#xE417;</md-icon>
+						Показать ошибки
+					</md-button>	
+				</div>	
 			</md-content>
 			<a id="{{ $ctrl.bottomId }}"></a>					
 		</div>
 	</div>
 </div>
 <input id="forceUpdate" type="hidden" ng-click="$ctrl.forceUpdate()" />
-<div class="confirm-dialog-container">
+<div class="dialog-container">
 	<div class="md-dialog-container" id="confirmDeleteDialog">
 		<md-dialog md-theme="default" aria-label="Подтверждение действия" ng-class="dialog.css" 
 			role="dialog" tabindex="-1">
@@ -61,11 +72,63 @@
 				</div>
 			</md-dialog-content>
 			<md-dialog-actions>
-				<md-button class="md-primary md-cancel-button" ng-click="$ctrl.closeClearListDialog()">
+				<md-button class="md-primary md-cancel-button" ng-click="$ctrl.closeDialog()">
 					<span>Нет</span>
 				</md-button>
 				<md-button class="md-primary md-raised md-accent md-confirm-button" ng-click="$ctrl.clearList()">
 					<span>Да</span>
+				</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+	</div>
+</div>
+<div class="dialog-container">
+	<div class="md-dialog-container" id="videosWithoutLikesDialog">
+		<md-dialog md-theme="default" aria-label="Список видео без лайков" ng-class="dialog.css" 
+			role="dialog" tabindex="-1">
+			<md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
+				<h2>Список видео без лайков</h2>
+				<md-list>
+					<md-list-item ng-repeat="video in $ctrl.lastCheckingResult.withoutLikesShown">
+						<a ng-href="https://www.youtube.com/watch?v={{ ::video }}" target="_blank">
+							https://www.youtube.com/watch?v={{ ::video }}
+						</a>
+					</md-list-item>
+				</md-list>
+				<md-collection-pagination collection="$ctrl.lastCheckingResult.withoutLikes" 
+					paginated-collection="$ctrl.lastCheckingResult.withoutLikesShown">
+				</md-collection-pagination> 
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary md-raised" ng-click="$ctrl.closeDialog()">
+					<span>Закрыть</span>
+				</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+	</div>
+</div>
+<div class="dialog-container">
+	<div class="md-dialog-container" id="failedVideosDialog">
+		<md-dialog md-theme="default" aria-label="Список видео, на которых не удалось восстановить лайки" ng-class="dialog.css" 
+			role="dialog" tabindex="-1">
+			<md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
+				<h2>Ошибки</h2>
+				<md-list>
+					<md-list-item ng-repeat="video in $ctrl.lastFailedVideosShown">
+						<p>
+							<a ng-href="https://www.youtube.com/watch?v={{ ::video.id }}" target="_blank">
+								{{ ::video.id }}
+							</a>: {{ ::video.errorMsg || "Неизвестная ошибка" }}		
+						</p>
+					</md-list-item>
+				</md-list>
+				<md-collection-pagination collection="$ctrl.lastFailedVideos" 
+					paginated-collection="$ctrl.lastFailedVideosShown">
+				</md-collection-pagination> 
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary md-raised" ng-click="$ctrl.closeDialog()">
+					<span>Закрыть</span>
 				</md-button>
 			</md-dialog-actions>
 		</md-dialog>

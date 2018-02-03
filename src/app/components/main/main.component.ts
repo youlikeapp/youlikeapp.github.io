@@ -107,15 +107,15 @@ class MainController implements ng.IComponentController {
         toastr.success("Список видео сохранён.");
     }
 
-    public showClearListDialog(): void {
+    public showDialog(id: string): void {
         this.$mdDialog.show({
-            contentElement: "#confirmDeleteDialog",
+            contentElement: `#${id}`,
             parent: document.body
         });
     }
 
-    public closeClearListDialog(): void {
-        this.$mdDialog.cancel();
+    public closeDialog(): void {
+        this.$mdDialog.hide();
     }
 
     public clearList(): void {

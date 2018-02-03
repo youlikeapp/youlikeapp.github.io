@@ -6,7 +6,6 @@ import { NavService, NavItem } from "./../../common/nav/nav.service";
 function routeConfig($stateProvider: StateProvider): void {
     "ngInject";
 
-
     $stateProvider
         .state("app.main", {
             url: "/",
@@ -27,7 +26,8 @@ function runConfig(NavService: NavService): void {
 
 const Main: ng.IModule = angular
     .module("components.main", [
-        "blockUI"
+        "blockUI",
+        "mdCollectionPagination"
     ])
     .component("main", new MainComponent)
     .config(routeConfig)

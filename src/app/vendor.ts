@@ -7,3 +7,4 @@ import "angular-sanitize";
 import "angular-animate";
 import "angular-block-ui";
 import "angular-socialshare";
+import "md-collection-pagination";

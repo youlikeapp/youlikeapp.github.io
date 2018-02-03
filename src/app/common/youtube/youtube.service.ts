@@ -44,7 +44,7 @@ export class YouTubeService {
 
     public checkVideos(videosList: string): PromiseLike<CheckingResult> {
         let videos: string[] = videosList.split("\n");
-        let videoIds: string[] = videos.map((video) => {
+        let videoIds: string[] = _.uniq(videos.map((video) => {
             let result: string;
 
             if (validator.isURL(video)) {
@@ -54,7 +54,7 @@ export class YouTubeService {
             }
 
             return result;
-        });
+        }));
 
         // maximum possible batch size for the request is 580.
         let videoIdsChunks: string[][] = _.chunk(videoIds, 580);
