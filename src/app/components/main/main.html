@@ -86,8 +86,14 @@
 	<div class="md-dialog-container" id="videosWithoutLikesDialog">
 		<md-dialog md-theme="default" aria-label="Список видео без лайков" ng-class="dialog.css" 
 			role="dialog" tabindex="-1">
-			<md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
+			<md-toolbar class="md-toolbar-tools">
 				<h2>Список видео без лайков</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="$ctrl.closeDialog()">
+					<md-icon class="material-icons">&#xE5CD;</md-icon>
+				</md-button>
+			</md-toolbar>
+			<md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
 				<md-list>
 					<md-list-item ng-repeat="video in $ctrl.lastCheckingResult.withoutLikesShown">
 						<a ng-href="https://www.youtube.com/watch?v={{ ::video }}" target="_blank">
@@ -99,11 +105,6 @@
 					paginated-collection="$ctrl.lastCheckingResult.withoutLikesShown">
 				</md-collection-pagination> 
 			</md-dialog-content>
-			<md-dialog-actions>
-				<md-button class="md-primary md-raised" ng-click="$ctrl.closeDialog()">
-					<span>Закрыть</span>
-				</md-button>
-			</md-dialog-actions>
 		</md-dialog>
 	</div>
 </div>
@@ -111,8 +112,14 @@
 	<div class="md-dialog-container" id="failedVideosDialog">
 		<md-dialog md-theme="default" aria-label="Список видео, на которых не удалось восстановить лайки" ng-class="dialog.css" 
 			role="dialog" tabindex="-1">
-			<md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
+			<md-toolbar class="md-toolbar-tools">
 				<h2>Ошибки</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="$ctrl.closeDialog()">
+					<md-icon class="material-icons">&#xE5CD;</md-icon>
+				</md-button>
+			</md-toolbar>
+			<md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
 				<md-list>
 					<md-list-item ng-repeat="video in $ctrl.lastFailedVideosShown">
 						<p>
@@ -126,11 +133,6 @@
 					paginated-collection="$ctrl.lastFailedVideosShown">
 				</md-collection-pagination> 
 			</md-dialog-content>
-			<md-dialog-actions>
-				<md-button class="md-primary md-raised" ng-click="$ctrl.closeDialog()">
-					<span>Закрыть</span>
-				</md-button>
-			</md-dialog-actions>
 		</md-dialog>
 	</div>
 </div>
