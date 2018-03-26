@@ -1,0 +1,124 @@
+<div layout-padding layout="column">
+    <div class="md-body-1">
+        <div layout="row">
+            <div layout-xs="column" flex="50" flex-xs="100">
+                <h1 class="md-headline">Поиск коментариев кремлеботов</h1>
+                <md-content>
+                    <video-list-comments></video-list-comments>
+                    <md-button class="md-raised md-primary"
+                               ng-disabled="$ctrl.videoListService.videosListIsEmpty"
+                               ng-click="$ctrl.commentsCheck()">
+                        <md-icon class="material-icons">&#xE065;</md-icon>
+                        Cохранить и проверить на ботов
+                    </md-button>
+                    <md-button class="md-raised" ng-disabled="$ctrl.videoListService.videosListIsEmpty"
+                               id="saveListBtn"
+                               ng-click="!$ctrl.saveBtnClickDisabled && $ctrl.saveList()">
+                        <md-icon class="material-icons">&#xE161;</md-icon>
+                        Сохранить
+                    </md-button>
+                    <md-button class="md-raised" ng-if="$ctrl.videoListService.hasVideosInStorage"
+                               ng-click="$ctrl.loadList()">
+                        <md-icon class="material-icons">&#xE929;</md-icon>
+                        Загрузить
+                    </md-button>
+                    <md-button class="md-raised md-accent" ng-if="$ctrl.videoListService.hasVideosInStorage"
+                               ng-click="$ctrl.showDialog('confirmDeleteDialog')">
+                        <md-icon class="material-icons">&#xE872;</md-icon>
+                        Удалить
+                    </md-button>
+                </md-content>
+            </div>
+            <div layout-xs="column" flex="50">
+                <h1 class="md-headline">Результаты проверки</h1>
+                <md-content ng-if="$ctrl.checkResults.length > 0">
+                    <md-grid-list md-cols="12" md-gutter="1rem" md-row-height-xs="1:3" md-row-height="4:5">
+                        <md-grid-tile md-colspan="5"><h5>Ссылка на видео</h5></md-grid-tile>
+                        <md-grid-tile md-colspan="3"><h5>Последний проверенный коментарий</h5></md-grid-tile>
+                        <md-grid-tile md-colspan="1"><h5>Коментарии ботов</h5></md-grid-tile>
+                        <md-grid-tile md-colspan="3">
+                            <md-checkbox aria-label="Select All" ng-checked="$ctrl.isSelectAllChecked()"
+                                         md-indeterminate="$ctrl.isIndeterminate()"
+                                         ng-click="$ctrl.toggleSelectAll()">
+                                <h5>{{$ctrl.isSelectAllChecked() ? 'Снять все' : 'Выбрать все'}}</h5>
+                            </md-checkbox>
+                        </md-grid-tile>
+                    </md-grid-list>
+                    <div style="max-height: 60vh; overflow-y: auto">
+                        <md-grid-list md-cols="12" md-gutter="1em" md-row-height-xs="1:3" md-row-height-gt-sm="2:3"
+                                      md-row-height-gt-lg="2:2"
+                                      ng-repeat="checkResult in $ctrl.checkResults">
+                            <md-grid-tile md-colspan="5">
+                                <a style="overflow: hidden"
+                                   ng-href="https://www.youtube.com/watch?v={{ checkResult.videoId }}"
+                                   target="_blank">
+                                    https://www.youtube.com/watch?v={{ checkResult.videoId }}
+                                </a>
+                            </md-grid-tile>
+                            <md-grid-tile md-colspan="3">
+                                <div>{{ checkResult.lastCheckTimeString() }}</div>
+                            </md-grid-tile>
+                            <md-grid-tile md-colspan="1"><span>{{ checkResult.botComments.length }}</span>
+                            </md-grid-tile>
+                            <md-grid-tile md-colspan="3">
+                                <md-checkbox ng-checked="checkResult.selected"
+                                             ng-click="$ctrl.toggleSelected(checkResult, selected)">
+                                </md-checkbox>
+                            </md-grid-tile>
+                        </md-grid-list>
+                    </div>
+                    <div ng-if="$ctrl.checkResults.length > 0" layout-xs="column">
+                        <md-button class="md-raised"
+                                   ng-disabled="!$ctrl.anyBotVideoIsSelected()"
+                                   ng-click="$ctrl.banBots()">
+                            <md-tooltip md-direction="bottom">Банит ботов найденных в <u>ваших</u> отмеченных
+                                галочками
+                                видео, удаляя все их коментарии и делая невозможным для них оставлять новые
+                                коментарии
+                                под
+                                вашими видео
+                            </md-tooltip>
+                            <md-icon class="material-icons">&#xE8DC;</md-icon>
+                            Забанить выбранные
+                        </md-button>
+                        <md-button class="md-raised" ng-disabled="$ctrl.isNoneSelected()"
+                                   ng-click="$ctrl.fullRecheck()">
+                            <md-tooltip md-direction="bottom">Полная проверка может занять продолжительное время.
+                                Для
+                                проверки на новые комментарии используйте кнопку "Сохранить и проверить" под списком
+                                видео
+                                слева
+                            </md-tooltip>
+                            <md-icon class="material-icons">&#xE417;</md-icon>
+                            Полная перепроверка выбранных
+                        </md-button>
+                    </div>
+                </md-content>
+                <a id="{{ $ctrl.bottomId }}"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="forceUpdate" type="hidden" ng-click="$ctrl.forceUpdate()"/>
+<div class="dialog-container">
+    <div class="md-dialog-container" id="confirmDeleteDialog">
+        <md-dialog md-theme="default" aria-label="Подтверждение действия" ng-class="dialog.css"
+                   role="dialog" tabindex="-1">
+            <md-dialog-content class="md-dialog-content" role="document" tabindex="-1">
+                <h2>Подтверждение действия</h2>
+                <div>
+                    <p>Вы уверены, что хотите удалить список видео?</p>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button class="md-primary md-cancel-button" ng-click="$ctrl.closeDialog()">
+                    <span>Нет</span>
+                </md-button>
+                <md-button class="md-primary md-raised md-accent md-confirm-button"
+                           ng-click="$ctrl.clearList()">
+                    <span>Да</span>
+                </md-button>
+            </md-dialog-actions>
+        </md-dialog>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<md-input-container class="md-block">
+    <label>Список видео (идентификаторы или полные ссылки)</label>
+    <textarea id="videosListTextArea" required rows="12" md-no-autogrow
+              ng-class="videoListCtrl.videoListService.videosListIsEmpty && 'list-empty'"
+              ng-model="videoListCtrl.videoListService.videosList"
+              ng-focus="videoListCtrl.onListFocus()"
+              ng-blur="videoListCtrl.onListBlur()"
+              ng-change="videoListCtrl.onListChange()"></textarea>
+</md-input-container>
