@@ -61,6 +61,8 @@ export class VideoListService {
     }
 
     public getStoredResult(videoId: string): StoredVideoCheckResult {
+        if (!localStorage.videosList)
+            return null
         const dataFromStorage: (string | { [videoId: string]: StoredVideoCheckResult })[] = JSON.parse(
             localStorage.videosList
         );
@@ -82,6 +84,9 @@ export class VideoListService {
     }
 
     public getCheckResults(videoId: string): CheckResults {
+        if (!localStorage.videosList) {
+            return new CheckResults(videoId, null);
+        }
         const dataFromStorage: (string | { [videoId: string]: StoredVideoCheckResult })[] = JSON.parse(
             localStorage.videosList
         );

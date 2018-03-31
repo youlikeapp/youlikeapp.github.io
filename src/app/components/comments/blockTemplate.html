@@ -1,0 +1,16 @@
+<div class="block-ui-overlay"></div>
+<div class="block-ui-message-container" aria-live="assertive" aria-atomic="true">
+    <div class="block-ui-message" ng-class="$_blockUiMessageClass">
+        <div>Проверка видео:
+            <a style="overflow: hidden"
+               ng-href="https://www.youtube.com/watch?v={{ state.message.videoId }}"
+               target="_blank">
+                {{ state.message.videoId }}
+            </a></div>
+        <div>коментарии: {{state.message.page * 100 - 100}} - {{state.message.page * 100}}</div>
+        <md-button id="stopCommentsCheck"
+                   class="md-primary md-raised md-accent md-confirm-button">
+            Остановить проверку
+        </md-button>
+    </div>
+</div>

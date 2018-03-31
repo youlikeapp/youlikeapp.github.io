@@ -7,7 +7,7 @@ import YouTubeAccountComponent from './account.component';
 import { YouTubeService } from './youtube.service';
 
 const YouTube: ng.IModule = angular
-    .module('common.youtube', [])
+    .module('common.youtube', ['rx'])
     .config(($stateProvider: StateProvider) => {
         'ngInject';
     })

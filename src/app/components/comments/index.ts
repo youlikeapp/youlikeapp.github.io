@@ -25,11 +25,17 @@ function runConfig(NavService: NavService): void {
 }
 
 const CommentsCheck: ng.IModule = angular
-    .module('components.commentsCheck', ['blockUI', 'mdCollectionPagination'])
+    .module('components.commentsCheck', ['blockUI', 'mdCollectionPagination', 'rx'])
     .service('videoListService', VideoListService)
     .component('commentsCheck', new CommentsCheckComponent())
     .directive('videoListComments', ['videoListService', () => new VideoListDirective()])
     .config(routeConfig)
+    .config([
+        'blockUIConfig',
+        blockUIConfig => {
+            blockUIConfig.templateUrl = 'blockTemplate.html';
+        }
+    ])
     .run(runConfig);
 
 export default CommentsCheck;

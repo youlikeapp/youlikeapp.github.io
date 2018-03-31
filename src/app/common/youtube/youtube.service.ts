@@ -2,10 +2,13 @@ import * as queryString from 'query-string';
 import * as validator from 'validator';
 import * as toastr from 'toastr';
 import * as _ from 'lodash';
-import YoutubeApiSamples from './youtubeApiSamples.service';
-import DateTimeFormat = Intl.DateTimeFormat;
 import moment = require('moment');
 import { CheckResults, VideoToCheck } from '../../components/comments/commentsCheck';
+import * as Rx from 'rx';
+import VideoListResponse = gapi.client.youtube.VideoListResponse;
+import Request = gapi.client.Request;
+import Response = gapi.client.Response;
+import Observable = Rx.Observable;
 
 export class YouTubeService {
     private googleAuth: gapi.auth2.GoogleAuth;
@@ -18,13 +21,13 @@ export class YouTubeService {
         return this.$rootScope.isAuthorized;
     }
 
-    constructor(private $rootScope: ng.IRootScopeServicex) {
+    constructor(private $rootScope: ng.IRootScopeServicex, private blockUI: blockUI.BlockUIService, private rx: Rx) {
         'ngInject';
 
         gapi.load('client:auth2', () => {
             gapi.client
                 .init({
-                    clientId: '871050293069-eqou5jodn7u9tahldd0jqdhu10mlk13f.apps.googleusercontent.com',
+                    clientId: '651710474192-nc3uslvlc9a6cdmm920blgsrroo4e04p.apps.googleusercontent.com',
                     scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl'
                 })
                 .then(() => {
@@ -39,6 +42,24 @@ export class YouTubeService {
                 })
                 .catch(onRejected => console.log('error gapi client init', onRejected));
         });
+    }
+
+    private initClientId(clientId: string): Promise<any> {
+        return gapi.client
+            .init({
+                clientId,
+                scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl'
+            })
+            .then(() => {
+                this.googleAuth = gapi.auth2.getAuthInstance();
+
+                this.googleAuth.isSignedIn.listen(this.updateSignInStatus.bind(this));
+
+                (<any>this.$rootScope).isAuthorized = this.googleAuth.isSignedIn.get();
+                (<any>this.$rootScope).currentUser = this.getCurrentUser();
+
+                this.$rootScope.$apply();
+            });
     }
 
     public login(): Promise<void> {
@@ -253,7 +274,7 @@ export class YouTubeService {
         const latestCheckResult = moment(videoCommentCheckResult.lastCheckLatestCommentChecked);
         for (const item of items) {
             const comment = item.snippet.topLevelComment;
-            const authorId = comment.snippet.authorChannelId.value;
+            const authorId = comment.snippet.authorChannelId;
             if (!fullRecheck && moment(comment.snippet.publishedAt).isSameOrBefore(latestCheckResult)) {
                 // console.log(
                 //     `stopping check because comment publishedAt=${
@@ -301,13 +322,17 @@ export class YouTubeService {
         requestParams,
         videoCommentCheckResult: YoutubeCommentsCheckResult,
         nextPageToken?: string,
-        fullRecheck?: boolean
+        fullRecheck?: boolean,
+        pageNum?: number
     ): Promise<YoutubeCommentsCheckResult> {
         if (nextPageToken) {
             requestParams = { ...requestParams, ...{ pageToken: nextPageToken } };
         }
         try {
             const response = await (<any>gapi.client).youtube.commentThreads.list(requestParams);
+            const page = pageNum || 1;
+            this.blockUI.message({ videoId: videoCommentCheckResult.videoId, page });
+            this.$rootScope.$apply();
 
             videoCommentCheckResult = await this.parseCommentListResponse(response.result, videoCommentCheckResult);
             if (response.result.nextPageToken && !videoCommentCheckResult.abortNextPageFetch) {
@@ -315,7 +340,8 @@ export class YouTubeService {
                     requestParams,
                     videoCommentCheckResult,
                     response.result.nextPageToken,
-                    fullRecheck
+                    fullRecheck,
+                    pageNum ? pageNum + 1 : 2
                 );
             }
         } catch (error) {
@@ -331,8 +357,9 @@ export class YouTubeService {
 
     public async commentsCheck(
         videosToCheck: VideoToCheck[],
-        fullRecheck?: boolean
-    ): Promise<YoutubeCommentsCheckResult[]> {
+        fullRecheck?: boolean,
+        cancelFn?
+    ): Promise<Observable<YoutubeCommentsCheckResult[]>> {
         await gapi.client.load('youtube', 'v3');
 
         if (!this.loggedUserChannelId) {
@@ -340,25 +367,75 @@ export class YouTubeService {
         }
         let result: YoutubeCommentsCheckResult[] = [];
         try {
-            for (let videoToCheck of videosToCheck) {
-                let videoCommentCheckResult = new YoutubeCommentsCheckResult(
+            const allVideoIds = videosToCheck.map(item => item.videoId).join(',');
+            const response: Response<VideoListResponse> = await (<any>gapi.client).youtube.videos.list({
+                id: allVideoIds,
+                part: 'snippet, statistics'
+            });
+            console.log(response);
+            let totalCommentsForProgress = 0;
+            const youtubeCheckResults = response.result.items.map(item => {
+                const videoToCheck = videosToCheck.find(v => v.videoId === item.id);
+                const videoCommentCheckResult = new YoutubeCommentsCheckResult(
                     videoToCheck.videoId,
                     videoToCheck.lastCheck
                 );
-                let requestParams = { videoId: videoToCheck.videoId, part: 'snippet,replies', maxResults: 100 };
-                videoCommentCheckResult = await this.commentThreadRequest(
-                    requestParams,
-                    videoCommentCheckResult,
-                    null,
-                    fullRecheck
+                videoCommentCheckResult.title = item.snippet.title;
+                videoCommentCheckResult.channelName = item.snippet.channelTitle;
+                totalCommentsForProgress += Number(item.statistics.commentCount);
+                // videoCommentCheckResult.totalComments = Number(item.statistics.commentCount);
+                return videoCommentCheckResult;
+            });
+
+            const observables$ = [];
+
+            for (const youtubeCheckResult of youtubeCheckResults) {
+                youtubeCheckResult.totalComments = totalCommentsForProgress;
+                const requestParams = { videoId: youtubeCheckResult.videoId, part: 'snippet,replies', maxResults: 100 };
+                observables$.push(
+                    Rx.Observable.fromPromise(
+                        this.commentThreadRequest(requestParams, youtubeCheckResult, null, fullRecheck)
+                    ).map(v => {
+                        console.log('commentThreadRequest v = ', v);
+                        return v;
+                    })
                 );
-                result.push(videoCommentCheckResult);
             }
-            return result;
+
+            return Rx.Observable.combineLatest(observables$);
+
+            // for (let videoToCheck of videosToCheck) {
+            //     let videoCommentCheckResult = new YoutubeCommentsCheckResult(
+            //         videoToCheck.videoId,
+            //         videoToCheck.lastCheck
+            //     );
+            //     let requestParams = { videoId: videoToCheck.videoId, part: 'snippet,replies', maxResults: 100 };
+            //
+            //     const obs$ = Rx.Observable.fromPromise(
+            //         this.commentThreadRequest(requestParams, videoCommentCheckResult, null, fullRecheck)
+            //     );
+            //
+            //     await obs$
+            //         // .takeUntil(cancelFn())
+            //         .map(v => {
+            //             console.log('commentThreadRequest v = ', v);
+            //             result.push(v);
+            //         })
+            //         .subscribe();
+
+            // videoCommentCheckResult = await this.commentThreadRequest(
+            //     requestParams,
+            //     videoCommentCheckResult,
+            //     null,
+            //     fullRecheck
+            // );
+            // result.push(videoCommentCheckResult);
+            // }
+            // return result;
         } catch (error) {
             toastr.error(error);
-            console.error(error);
-            return [];
+            console.error('youtubeservice error', error);
+            return Rx.Observable.from([]);
         }
     }
     private async fetchBotData() {
@@ -462,6 +539,8 @@ export class YoutubeCommentsCheckResult {
     public lastCheckLatestCommentChecked: Date;
     public abortNextPageFetch = false;
     public error: boolean = false;
+    public channelName: string;
+    public title: string;
 
     public getLatestCommentDate(): string {
         return this.mostFreshCommentChecked ? this.mostFreshCommentChecked.toLocaleString() : '-';

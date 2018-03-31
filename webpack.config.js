@@ -41,7 +41,7 @@ var config = {
                 loader: 'awesome-typescript-loader',
                 options: {
                     useBabel: true,
-                    useCache: true,
+                    // useCache: true,
                     forceIsolatedModules: true,
                     transpileOnly: true
                 },

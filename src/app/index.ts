@@ -45,6 +45,9 @@ const App: ng.IModule = angular
     .config(themeConfig)
     .config(toastrConfig)
     .component('app', new AppComponent());
-App.run($templateCache => $templateCache.put('videoslist.html', require('./components/videolist/videoslist.html')));
+App.run($templateCache => {
+    $templateCache.put('videoslist.html', require('./components/videolist/videoslist.html'));
+    $templateCache.put('blockTemplate.html', require('./components/comments/blockTemplate.html'));
+});
 
 export default App;

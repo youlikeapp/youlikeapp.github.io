@@ -1,16 +1,14 @@
 import * as toastr from 'toastr';
 import { blockUI, material } from 'angular';
-import { YouTubeService, YoutubeCommentsCheckResult, BotComment } from '../../common/youtube/youtube.service';
+import { YouTubeService, BotComment } from '../../common/youtube/youtube.service';
 
 import './commentsCheck.scss';
 import * as _ from 'lodash';
 import * as queryString from 'query-string';
 import * as validator from 'validator';
 import moment = require('moment');
-import { unionWith, isEqual } from 'lodash';
 import { StoredVideoCheckResult, VideoListService } from '../videolist/videoListService';
 import * as angular from 'angular';
-import isVariableWidth = require('validator/lib/isVariableWidth');
 
 export class CommentsCheckComponent implements ng.IComponentOptions {
     public controller: ng.IControllerConstructor;
@@ -53,9 +51,9 @@ export class CheckResults {
 class CommentsCheckController implements ng.IComponentController {
     private readonly bottomId: string = 'bottom';
     // tslint:disable-next-line:max-line-length
-    private myChannelId: string;
     private checkResults: CheckResults[] = [];
     private saveBtnClickDisabled: boolean = false;
+    private checkCancel: any;
 
     constructor(
         private $scope: ng.IScope,
@@ -63,12 +61,14 @@ class CommentsCheckController implements ng.IComponentController {
         private $mdMedia: material.IMedia,
         private youtubeService: YouTubeService,
         private blockUI: blockUI.BlockUIService,
+        private blockUIConfig: blockUI.BlockUIConfig,
         private $location: ng.ILocationService,
         private $anchorScroll: ng.IAnchorScrollService,
-        private videoListService: VideoListService,
-        private $element: JQLite
+        private videoListService: VideoListService
     ) {
         'ngInject';
+
+        this.checkCancel = this.$scope.$createObservableFunction('checkCancel');
     }
 
     public get hasVideosInStorage(): boolean {
@@ -83,6 +83,7 @@ class CommentsCheckController implements ng.IComponentController {
 
     public fullRecheck() {
         // this.clearStats();
+
         this.blockUI.start('Выполняется полная перепроверка отмеченных видео');
 
         const videoIds = this.checkResults
@@ -131,9 +132,25 @@ class CommentsCheckController implements ng.IComponentController {
         );
     }
 
-    public commentsCheck() {
+    public skipVideoInCheck() {
+        console.log('mark current video checked in checkResult as error, check next video');
+    }
+
+    public cancelCheck() {
+        console.log('mark current video checked in checkResult as error, sets checkResult, closes blockUI');
+    }
+
+    public idiNah() {
+        console.log('nah idi');
+        stop();
+    }
+
+    public async commentsCheck() {
         this.clearStats();
-        this.blockUI.start('Выполняется проверка коментов');
+
+        // this.showDialog('checkStatusDialog');
+        this.blockUI.start();
+        // this.blockUI.message({idiNah: this.checkCancel})
 
         let displayedVideoList: string[] = this.videoListService.videosList.split('\n');
         const storedCheckResults: { [displayId: string]: { [videoId: string]: StoredVideoCheckResult } } = {};
@@ -153,10 +170,17 @@ class CommentsCheckController implements ng.IComponentController {
             })
         );
 
-        this.youtubeService.commentsCheck(videoIds).then(
+        const youtubeCheck$ = await this.youtubeService.commentsCheck(videoIds, false);
+        const stopButton = document.querySelector('#stopCommentsCheck');
+        console.log('stopButton = ', stopButton);
+        const stopCheck$ = Rx.Observable.fromEvent(stopButton, 'click');
+        youtubeCheck$
+            .do(value => console.log('do', value))
+            .takeUntil(stopCheck$)
+            .subscribe(
             youtubeCheckResult => {
+                console.log('comments check youtubeCheckResult = ', youtubeCheckResult);
                 this.clearStats();
-
                 const checkResults: CheckResults[] = [];
                 youtubeCheckResult.filter(item => !item.error).map(item => {
                     const storedCheckResult = this.videoListService.getCheckResults(item.videoId);
@@ -208,10 +232,22 @@ class CommentsCheckController implements ng.IComponentController {
                 this.videoListService.resumeWatch();
             },
             error => {
-                console.log(error);
+                console.log('comment check subscribe error', error);
                 this.$scope.$apply(() => this.blockUI.stop());
+            },
+            () => {
+                console.log('complete');
             }
         );
+        // .catch(error => {
+        //     console.log(error);
+        //     this.$scope.$apply(() => this.blockUI.stop());
+        // })
+        // .subscribe(
+        //     () => console.log('comment check next'),
+        //     error => console.log('comment check subscribe error', error),
+        //     () => console.log('comment check complete')
+        // );
     }
 
     private synchronizeWithChromeExtension() {
