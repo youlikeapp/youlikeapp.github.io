@@ -25,7 +25,7 @@ function runConfig(NavService: NavService): void {
 }
 
 const CommentsCheck: ng.IModule = angular
-    .module('components.commentsCheck', ['blockUI', 'mdCollectionPagination', 'rx'])
+    .module('components.commentsCheck', ['blockUI', 'mdCollectionPagination'])
     .service('videoListService', VideoListService)
     .component('commentsCheck', new CommentsCheckComponent())
     .directive('videoListComments', ['videoListService', () => new VideoListDirective()])

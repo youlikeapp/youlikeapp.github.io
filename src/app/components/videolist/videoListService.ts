@@ -7,10 +7,12 @@ import { unionBy, union } from 'lodash';
 export class StoredVideoCheckResult {
     public comments: BotComment[] = [];
     public lastBotCheck: Date = null;
+    public commentsChecked = 0;
 
-    constructor(comments?: BotComment[], lastCheck?: Date) {
+    constructor(comments?: BotComment[], lastCheck?: Date, commentsChecked?: number) {
         this.comments = comments || [];
         this.lastBotCheck = lastCheck || null;
+        this.commentsChecked = commentsChecked || 0;
     }
 }
 
@@ -94,14 +96,16 @@ export class VideoListService {
             let id = item.toString();
             let botComments = [];
             let lastCheck = null;
+            let commentsChecked = 0;
             if (typeof item === 'object') {
                 id = Object.keys(item)[0];
                 botComments = item[id].comments;
                 lastCheck = item[id].lastBotCheck;
+                commentsChecked = item[id].commentsChecked;
             }
             const parsedId = validator.isURL(id) ? queryString.parse(queryString.extract(id)).v : id;
             if (videoId === parsedId) {
-                return new CheckResults(videoId, lastCheck, botComments);
+                return new CheckResults(videoId, lastCheck, botComments, commentsChecked);
             }
         }
         return new CheckResults(videoId, null);

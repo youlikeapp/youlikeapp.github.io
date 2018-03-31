@@ -43,7 +43,7 @@ class LikesController implements ng.IComponentController {
     }
 
     public checkVideos(): void {
-        this.blockUI.start('Выполняется проверка...');
+        this.blockUI.start({ message: 'Выполняется проверка...', template: 'likes' });
 
         this.youtubeService.checkVideos(this.videoListService.videosList).then(
             value => {

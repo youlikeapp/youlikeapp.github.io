@@ -1,16 +1,14 @@
 <div class="block-ui-overlay"></div>
 <div class="block-ui-message-container" aria-live="assertive" aria-atomic="true">
-    <div class="block-ui-message" ng-class="$_blockUiMessageClass">
-        <div>Проверка видео:
-            <a style="overflow: hidden"
-               ng-href="https://www.youtube.com/watch?v={{ state.message.videoId }}"
-               target="_blank">
-                {{ state.message.videoId }}
-            </a></div>
-        <div>коментарии: {{state.message.page * 100 - 100}} - {{state.message.page * 100}}</div>
-        <md-button id="stopCommentsCheck"
+    <div class="block-ui-message" layout-align="center" ng-class="$_blockUiMessageClass">
+        <div ng-if="state.template === 'likes'">{{ state.message }}</div>
+        <div ng-if="state.template === 'commentsCheck'">
+            <div>коментарии: {{state.message.totalCommentsChecked}} / ~{{state.message.totalCommentsToCheck}}</div>
+            <div style="color: red">от кремлеботов: {{ state.message.botComments }}</div>
+        </div>
+        <!--md-button id="stopCommentsCheck"
                    class="md-primary md-raised md-accent md-confirm-button">
             Остановить проверку
-        </md-button>
+        </md-button>-->
     </div>
 </div>

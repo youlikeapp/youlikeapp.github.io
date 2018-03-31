@@ -6,7 +6,6 @@ import moment = require('moment');
 import { CheckResults, VideoToCheck } from '../../components/comments/commentsCheck';
 import * as Rx from 'rx';
 import VideoListResponse = gapi.client.youtube.VideoListResponse;
-import Request = gapi.client.Request;
 import Response = gapi.client.Response;
 import Observable = Rx.Observable;
 
@@ -16,12 +15,15 @@ export class YouTubeService {
     public loggedUserOwnVideos: string[] = [];
     private dbUrl = 'https://raw.githubusercontent.com/YTObserver/YT-ACC-DB/master/mainDB';
     private botData: string[];
+    private totalCommentsChecked = 0;
+    private totalCommentsToCheck = 0;
+    private botsFound = 0;
 
     public get isAuthorized(): boolean {
         return this.$rootScope.isAuthorized;
     }
 
-    constructor(private $rootScope: ng.IRootScopeServicex, private blockUI: blockUI.BlockUIService, private rx: Rx) {
+    constructor(private $rootScope: ng.IRootScopeServicex, private blockUI: blockUI.BlockUIService) {
         'ngInject';
 
         gapi.load('client:auth2', () => {
@@ -266,7 +268,6 @@ export class YouTubeService {
         if (items.length === 0) {
             return videoCommentCheckResult;
         }
-        videoCommentCheckResult.totalComments += items.length;
 
         if (!videoCommentCheckResult.mostFreshCommentChecked)
             videoCommentCheckResult.mostFreshCommentChecked = this.getMostFreshCommentDate(items);
@@ -288,7 +289,6 @@ export class YouTubeService {
                 await this.fetchBotData();
             }
             if (this.isBot(authorId)) {
-                // console.log('bot comment', comment.snippet.textDisplay);
                 videoCommentCheckResult.botComments.push({
                     id: comment.id,
                     text: comment.snippet.textDisplay,
@@ -297,13 +297,13 @@ export class YouTubeService {
                     authorId,
                     topLevel: true
                 });
+                this.botsFound++;
             }
+            this.totalCommentsChecked++;
             const replies = (item.replies && item.replies.comments) || [];
-            videoCommentCheckResult.totalComments += replies.length;
             replies.forEach(reply => {
                 const replyAuthorId = reply.snippet.authorChannelId.value;
                 if (this.isBot(replyAuthorId)) {
-                    // console.log('bot comment reply', reply.snippet.textDisplay);
                     videoCommentCheckResult.botComments.push({
                         id: reply.id,
                         text: reply.snippet.textDisplay,
@@ -312,8 +312,16 @@ export class YouTubeService {
                         authorId: replyAuthorId,
                         topLevel: false
                     });
+                    this.botsFound++;
                 }
+                this.totalCommentsChecked++;
             });
+            this.blockUI.message({
+                totalCommentsChecked: this.totalCommentsChecked,
+                totalCommentsToCheck: this.totalCommentsToCheck,
+                botComments: this.botsFound
+            });
+            this.$rootScope.$apply();
         }
         return videoCommentCheckResult;
     }
@@ -322,17 +330,13 @@ export class YouTubeService {
         requestParams,
         videoCommentCheckResult: YoutubeCommentsCheckResult,
         nextPageToken?: string,
-        fullRecheck?: boolean,
-        pageNum?: number
+        fullRecheck?: boolean
     ): Promise<YoutubeCommentsCheckResult> {
         if (nextPageToken) {
             requestParams = { ...requestParams, ...{ pageToken: nextPageToken } };
         }
         try {
             const response = await (<any>gapi.client).youtube.commentThreads.list(requestParams);
-            const page = pageNum || 1;
-            this.blockUI.message({ videoId: videoCommentCheckResult.videoId, page });
-            this.$rootScope.$apply();
 
             videoCommentCheckResult = await this.parseCommentListResponse(response.result, videoCommentCheckResult);
             if (response.result.nextPageToken && !videoCommentCheckResult.abortNextPageFetch) {
@@ -340,8 +344,7 @@ export class YouTubeService {
                     requestParams,
                     videoCommentCheckResult,
                     response.result.nextPageToken,
-                    fullRecheck,
-                    pageNum ? pageNum + 1 : 2
+                    fullRecheck
                 );
             }
         } catch (error) {
@@ -357,9 +360,11 @@ export class YouTubeService {
 
     public async commentsCheck(
         videosToCheck: VideoToCheck[],
-        fullRecheck?: boolean,
-        cancelFn?
+        fullRecheck?: boolean
     ): Promise<Observable<YoutubeCommentsCheckResult[]>> {
+        this.botsFound = 0;
+        this.totalCommentsChecked = 0;
+        this.totalCommentsToCheck = 0;
         await gapi.client.load('youtube', 'v3');
 
         if (!this.loggedUserChannelId) {
@@ -373,7 +378,6 @@ export class YouTubeService {
                 part: 'snippet, statistics'
             });
             console.log(response);
-            let totalCommentsForProgress = 0;
             const youtubeCheckResults = response.result.items.map(item => {
                 const videoToCheck = videosToCheck.find(v => v.videoId === item.id);
                 const videoCommentCheckResult = new YoutubeCommentsCheckResult(
@@ -382,15 +386,15 @@ export class YouTubeService {
                 );
                 videoCommentCheckResult.title = item.snippet.title;
                 videoCommentCheckResult.channelName = item.snippet.channelTitle;
-                totalCommentsForProgress += Number(item.statistics.commentCount);
-                // videoCommentCheckResult.totalComments = Number(item.statistics.commentCount);
+                const commentsForCheck =
+                    Number(item.statistics.commentCount) - ((videoToCheck && videoToCheck.totalCommentsChecked) || 0);
+                videoCommentCheckResult.commentsForCheck = commentsForCheck;
+                this.totalCommentsToCheck += commentsForCheck;
                 return videoCommentCheckResult;
             });
 
             const observables$ = [];
-
             for (const youtubeCheckResult of youtubeCheckResults) {
-                youtubeCheckResult.totalComments = totalCommentsForProgress;
                 const requestParams = { videoId: youtubeCheckResult.videoId, part: 'snippet,replies', maxResults: 100 };
                 observables$.push(
                     Rx.Observable.fromPromise(
@@ -533,10 +537,21 @@ export type BotComment = {
 
 export class YoutubeCommentsCheckResult {
     public videoId: string;
-    public totalComments: number = 0;
+
     public botComments: BotComment[] = [];
+    /**
+     * Comments in response come sorted by date in descending order. This property is set when we process first comment.
+     */
     public mostFreshCommentChecked: Date;
+    /**
+     * This is fallback date we reset mostFreshCommentChecked to if error occurs
+     */
     public lastCheckLatestCommentChecked: Date;
+    /**
+     * Number of comments checked for video during this check. Is saved in localstorage afterwards.
+     * @type {number}
+     */
+    public commentsForCheck = 0;
     public abortNextPageFetch = false;
     public error: boolean = false;
     public channelName: string;

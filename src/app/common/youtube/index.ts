@@ -73,7 +73,7 @@ const YouTube: ng.IModule = angular
                 };
             };
 
-            $delegate.checkVideos = youtubeWrapper($delegate.checkVideos, 60);
+            $delegate.checkVideos = youtubeWrapper($delegate.checkVideos, 1);
             $delegate.setRating = youtubeWrapper($delegate.setRating, 60 * 60 * 6);
             $delegate.commentsCheck = youtubeWrapper($delegate.commentsCheck, 10);
             $delegate.banBotComments = youtubeWrapper($delegate.banBotComments, 1);

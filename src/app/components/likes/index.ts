@@ -30,6 +30,12 @@ const Likes: ng.IModule = angular
     .directive('videoList', ['videoListService', () =>  new VideoListDirective()])
     .component('likes', new LikesComponent())
     .config(routeConfig)
+    .config([
+        'blockUIConfig',
+        blockUIConfig => {
+            blockUIConfig.templateUrl = 'blockTemplate.html';
+        }
+    ])
     .run(runConfig);
 
 export default Likes;
