@@ -8,6 +8,7 @@ import * as Rx from 'rx';
 import VideoListResponse = gapi.client.youtube.VideoListResponse;
 import Response = gapi.client.Response;
 import Observable = Rx.Observable;
+import CommentThreadListResponse = gapi.client.youtube.CommentThreadListResponse;
 
 export class YouTubeService {
     private googleAuth: gapi.auth2.GoogleAuth;
@@ -275,19 +276,22 @@ export class YouTubeService {
         const latestCheckResult = moment(videoCommentCheckResult.lastCheckLatestCommentChecked);
         for (const item of items) {
             const comment = item.snippet.topLevelComment;
-            const authorId = comment.snippet.authorChannelId;
+            const authorId = comment.snippet.authorChannelId.value;
+            const displayName = comment.snippet.authorDisplayName;
             if (!fullRecheck && moment(comment.snippet.publishedAt).isSameOrBefore(latestCheckResult)) {
                 // console.log(
                 //     `stopping check because comment publishedAt=${
                 //         comment.snippet.publishedAt
-                //     } is before latestCheckResult = ${latestCheckResult.toDate()}`
+                //     } is same or before latestCheckResult = ${latestCheckResult.toDate()}`
                 // );
                 videoCommentCheckResult.abortNextPageFetch = true;
                 return videoCommentCheckResult;
             }
             if (!this.botData) {
+                // console.log('awaiting botdata');
                 await this.fetchBotData();
             }
+            // console.log('got bot data');
             if (this.isBot(authorId)) {
                 videoCommentCheckResult.botComments.push({
                     id: comment.id,
@@ -326,36 +330,50 @@ export class YouTubeService {
         return videoCommentCheckResult;
     }
 
-    private async commentThreadRequest(
+    private commentThreadRequest(
         requestParams,
         videoCommentCheckResult: YoutubeCommentsCheckResult,
         nextPageToken?: string,
         fullRecheck?: boolean
-    ): Promise<YoutubeCommentsCheckResult> {
+    ): Observable<YoutubeCommentsCheckResult> {
         if (nextPageToken) {
             requestParams = { ...requestParams, ...{ pageToken: nextPageToken } };
         }
-        try {
-            const response = await (<any>gapi.client).youtube.commentThreads.list(requestParams);
-
-            videoCommentCheckResult = await this.parseCommentListResponse(response.result, videoCommentCheckResult);
-            if (response.result.nextPageToken && !videoCommentCheckResult.abortNextPageFetch) {
-                await this.commentThreadRequest(
-                    requestParams,
-                    videoCommentCheckResult,
-                    response.result.nextPageToken,
-                    fullRecheck
-                );
-            }
-        } catch (error) {
-            videoCommentCheckResult.mostFreshCommentChecked = videoCommentCheckResult.lastCheckLatestCommentChecked;
-            videoCommentCheckResult.error = true;
-            console.log(
-                'error making commentThreadRequest, resetting mostFreshCommentChecked to previous check value',
-                error
+        // try {
+        const commentThreadList$: Observable<Response<CommentThreadListResponse>> = Observable.fromPromise(
+            (<any>gapi.client).youtube.commentThreads.list(requestParams)
+        );
+        return commentThreadList$
+            .switchMap(
+                response1 =>
+                    Observable.fromPromise(this.parseCommentListResponse(response1.result, videoCommentCheckResult)),
+                (response1, response2) => ({ response1, response2 })
+            )
+            .switchMap(
+                (merged: { response1: Response<CommentThreadListResponse>; response2: YoutubeCommentsCheckResult }) => {
+                    const { response1, response2 } = merged;
+                    videoCommentCheckResult = response2;
+                    if (response1.result.nextPageToken && !videoCommentCheckResult.abortNextPageFetch) {
+                        return this.commentThreadRequest(
+                            requestParams,
+                            videoCommentCheckResult,
+                            response1.result.nextPageToken,
+                            fullRecheck
+                        );
+                    } else {
+                        return Observable.of(videoCommentCheckResult);
+                    }
+                }
             );
-        }
-        return videoCommentCheckResult;
+        // } catch (error) {
+        //     videoCommentCheckResult.mostFreshCommentChecked = videoCommentCheckResult.lastCheckLatestCommentChecked;
+        //     videoCommentCheckResult.error = true;
+        //     console.log(
+        //         'error making commentThreadRequest, resetting mostFreshCommentChecked to previous check value',
+        //         error
+        //     );
+        // }
+        // return videoCommentCheckResult;
     }
 
     public async commentsCheck(
@@ -397,49 +415,17 @@ export class YouTubeService {
             for (const youtubeCheckResult of youtubeCheckResults) {
                 const requestParams = { videoId: youtubeCheckResult.videoId, part: 'snippet,replies', maxResults: 100 };
                 observables$.push(
-                    Rx.Observable.fromPromise(
-                        this.commentThreadRequest(requestParams, youtubeCheckResult, null, fullRecheck)
-                    ).map(v => {
+                    this.commentThreadRequest(requestParams, youtubeCheckResult, null, fullRecheck).map(v => {
                         console.log('commentThreadRequest v = ', v);
                         return v;
                     })
                 );
             }
-
-            return Rx.Observable.combineLatest(observables$);
-
-            // for (let videoToCheck of videosToCheck) {
-            //     let videoCommentCheckResult = new YoutubeCommentsCheckResult(
-            //         videoToCheck.videoId,
-            //         videoToCheck.lastCheck
-            //     );
-            //     let requestParams = { videoId: videoToCheck.videoId, part: 'snippet,replies', maxResults: 100 };
-            //
-            //     const obs$ = Rx.Observable.fromPromise(
-            //         this.commentThreadRequest(requestParams, videoCommentCheckResult, null, fullRecheck)
-            //     );
-            //
-            //     await obs$
-            //         // .takeUntil(cancelFn())
-            //         .map(v => {
-            //             console.log('commentThreadRequest v = ', v);
-            //             result.push(v);
-            //         })
-            //         .subscribe();
-
-            // videoCommentCheckResult = await this.commentThreadRequest(
-            //     requestParams,
-            //     videoCommentCheckResult,
-            //     null,
-            //     fullRecheck
-            // );
-            // result.push(videoCommentCheckResult);
-            // }
-            // return result;
+            return Observable.combineLatest(observables$);
         } catch (error) {
             toastr.error(error);
             console.error('youtubeservice error', error);
-            return Rx.Observable.from([]);
+            return Observable.from([]);
         }
     }
     private async fetchBotData() {
@@ -482,7 +468,10 @@ export class YouTubeService {
     }
 
     private isBot(authorId: string): boolean {
-        return authorId === 'UCyzxziMPZSZoHELLc0LABfg' || (this.botData && this.botData.indexOf(authorId) !== -1);
+        return (
+            authorId === 'UCyzxziMPZSZoHELLc0LABfg' ||
+            (this.botData && this.botData.indexOf(authorId) !== -1)
+        );
     }
 
     public isVideoOwner(videoId): boolean {

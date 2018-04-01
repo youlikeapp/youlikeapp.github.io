@@ -18,3 +18,11 @@ html, body {
 ui-view {
   min-height: 100vh;
 }
+
+.block-ui-status {
+  min-width: 330px;
+  text-align: center;
+  #stopCommentsCheck {
+    margin-top: 30px;
+  }
+}
