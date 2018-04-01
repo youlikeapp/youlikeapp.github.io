@@ -93,7 +93,6 @@ class CommentsCheckController implements ng.IComponentController {
         const youtubeCheck$ = await this.youtubeService.commentsCheck(videoIds, false);
         this.blockUI.start({ template: 'commentsCheck' });
         const stopButton = document.querySelector('#stopCommentsCheck');
-        console.log('stopButton = ', stopButton);
         const stopCheck$ = Rx.Observable.fromEvent(stopButton, 'click');
         youtubeCheck$.takeUntil(stopCheck$).subscribe(
             youtubeCheckResult => {
@@ -170,11 +169,10 @@ class CommentsCheckController implements ng.IComponentController {
         const youtubeCheck$ = await this.youtubeService.commentsCheck(videoIds, false);
         this.blockUI.start({ template: 'commentsCheck' });
         const stopButton = document.querySelector('#stopCommentsCheck');
-        console.log('stopButton = ', stopButton);
         const stopCheck$ = Rx.Observable.fromEvent(stopButton, 'click');
         youtubeCheck$.takeUntil(stopCheck$).subscribe(
             youtubeCheckResult => {
-                console.log('comments check youtubeCheckResult = ', youtubeCheckResult);
+                // console.log('comments check youtubeCheckResult = ', youtubeCheckResult);
                 this.clearStats();
                 const checkResults: CheckResults[] = [];
                 youtubeCheckResult.filter(item => !item.error).map(item => {

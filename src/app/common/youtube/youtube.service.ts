@@ -60,28 +60,6 @@ export class YouTubeService {
         this.googleAuth.signOut();
     }
 
-    public showComents(videosList: string) {
-        let videos: string[] = videosList.split('\n');
-        let videoIds: string[] = _.uniq(
-            videos.map(video => {
-                let result: string;
-
-                if (validator.isURL(video)) {
-                    result = queryString.parse(queryString.extract(video)).v;
-                } else {
-                    result = video;
-                }
-
-                return result;
-            })
-        );
-        let video1 = videoIds[0];
-
-        return gapi.client.load('youtube', 'v3').then(() => {
-            return this.getCurrentUser().getId();
-        });
-    }
-
     public checkVideos(videosList: string): PromiseLike<CheckingResult> {
         let videos: string[] = videosList.split('\n');
         let videoIds: string[] = _.uniq(
@@ -267,9 +245,7 @@ export class YouTubeService {
                 videoCommentCheckResult.abortNextPageFetch = true;
                 return videoCommentCheckResult;
             }
-            if (!this.botData) {
-                await this.fetchBotData();
-            }
+
             if (this.isBot(authorId)) {
                 videoCommentCheckResult.botComments.push({
                     id: comment.id,
@@ -342,16 +318,16 @@ export class YouTubeService {
                         return Observable.of(videoCommentCheckResult);
                     }
                 }
-            );
-        // } catch (error) {
-        //     videoCommentCheckResult.mostFreshCommentChecked = videoCommentCheckResult.lastCheckLatestCommentChecked;
-        //     videoCommentCheckResult.error = true;
-        //     console.log(
-        //         'error making commentThreadRequest, resetting mostFreshCommentChecked to previous check value',
-        //         error
-        //     );
-        // }
-        // return videoCommentCheckResult;
+            )
+            .catch(error => {
+                videoCommentCheckResult.mostFreshCommentChecked = videoCommentCheckResult.lastCheckLatestCommentChecked;
+                videoCommentCheckResult.error = true;
+                // console.log(
+                //     'error making commentThreadRequest, resetting mostFreshCommentChecked to previous check value',
+                //     error
+                // );
+                return Observable.of(videoCommentCheckResult);
+            });
     }
 
     public async commentsCheck(
@@ -366,7 +342,9 @@ export class YouTubeService {
         if (!this.loggedUserChannelId) {
             await this.getMyChannel();
         }
-        let result: YoutubeCommentsCheckResult[] = [];
+        if (!this.botData) {
+            await this.fetchBotData();
+        }
         try {
             const allVideoIds = videosToCheck.map(item => item.videoId).join(',');
             const response: Response<VideoListResponse> = await (<any>gapi.client).youtube.videos.list({
