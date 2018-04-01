@@ -277,7 +277,6 @@ export class YouTubeService {
         for (const item of items) {
             const comment = item.snippet.topLevelComment;
             const authorId = comment.snippet.authorChannelId.value;
-            const displayName = comment.snippet.authorDisplayName;
             if (!fullRecheck && moment(comment.snippet.publishedAt).isSameOrBefore(latestCheckResult)) {
                 // console.log(
                 //     `stopping check because comment publishedAt=${
@@ -288,10 +287,8 @@ export class YouTubeService {
                 return videoCommentCheckResult;
             }
             if (!this.botData) {
-                // console.log('awaiting botdata');
                 await this.fetchBotData();
             }
-            // console.log('got bot data');
             if (this.isBot(authorId)) {
                 videoCommentCheckResult.botComments.push({
                     id: comment.id,

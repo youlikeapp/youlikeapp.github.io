@@ -6,8 +6,6 @@
             <div>коментарии: {{state.message.totalCommentsChecked}} / ~{{state.message.totalCommentsToCheck}}</div>
             <div style="color: red">от кремлеботов: {{ state.message.botComments }}</div>
         </div>
-        <md-button id="stopCommentsCheck" class="md-primary md-accent">
-            Отменить проверку
-        </md-button>
+        <md-button ng-show="state.template === 'commentsCheck'" id="stopCommentsCheck" class="md-primary">Отменить проверку</md-button>
     </div>
 </div>
