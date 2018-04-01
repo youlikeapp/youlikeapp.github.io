@@ -4,7 +4,6 @@ import * as toastr from 'toastr';
 import * as _ from 'lodash';
 import moment = require('moment');
 import { CheckResults, VideoToCheck } from '../../components/comments/commentsCheck';
-import * as Rx from 'rx';
 import VideoListResponse = gapi.client.youtube.VideoListResponse;
 import Response = gapi.client.Response;
 import Observable = Rx.Observable;
@@ -30,7 +29,7 @@ export class YouTubeService {
         gapi.load('client:auth2', () => {
             gapi.client
                 .init({
-                    clientId: '651710474192-nc3uslvlc9a6cdmm920blgsrroo4e04p.apps.googleusercontent.com',
+                    clientId: '871050293069-eqou5jodn7u9tahldd0jqdhu10mlk13f.apps.googleusercontent.com',
                     scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl'
                 })
                 .then(() => {
@@ -45,24 +44,6 @@ export class YouTubeService {
                 })
                 .catch(onRejected => console.log('error gapi client init', onRejected));
         });
-    }
-
-    private initClientId(clientId: string): Promise<any> {
-        return gapi.client
-            .init({
-                clientId,
-                scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl'
-            })
-            .then(() => {
-                this.googleAuth = gapi.auth2.getAuthInstance();
-
-                this.googleAuth.isSignedIn.listen(this.updateSignInStatus.bind(this));
-
-                (<any>this.$rootScope).isAuthorized = this.googleAuth.isSignedIn.get();
-                (<any>this.$rootScope).currentUser = this.getCurrentUser();
-
-                this.$rootScope.$apply();
-            });
     }
 
     public login(): Promise<void> {
@@ -465,10 +446,7 @@ export class YouTubeService {
     }
 
     private isBot(authorId: string): boolean {
-        return (
-            authorId === 'UCyzxziMPZSZoHELLc0LABfg' ||
-            (this.botData && this.botData.indexOf(authorId) !== -1)
-        );
+        return authorId === 'UCyzxziMPZSZoHELLc0LABfg' || (this.botData && this.botData.indexOf(authorId) !== -1);
     }
 
     public isVideoOwner(videoId): boolean {
