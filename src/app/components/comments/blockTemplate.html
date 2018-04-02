@@ -1,0 +1,11 @@
+<div class="block-ui-overlay"></div>
+<div class="block-ui-message-container" aria-live="assertive" aria-atomic="true">
+    <div class="block-ui-message block-ui-status" ng-class="$_blockUiMessageClass">
+        <div ng-if="state.template === 'likes'">{{ state.message }}</div>
+        <div ng-if="state.template === 'commentsCheck'">
+            <div>коментарии: {{state.message.totalCommentsChecked}} / ~{{state.message.totalCommentsToCheck}}</div>
+            <div style="color: red">от кремлеботов: {{ state.message.botComments }}</div>
+        </div>
+        <md-button ng-show="state.template === 'commentsCheck'" id="stopCommentsCheck" class="md-primary">Отменить проверку</md-button>
+    </div>
+</div>

@@ -1,2 +1,7 @@
 /node_modules/**
 .vscode/
+.idea
+dist
+yarn.lock
+.awcache
+tslint.json

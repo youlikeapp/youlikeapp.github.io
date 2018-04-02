@@ -3,13 +3,14 @@
 		"module": "commonjs",
 		"target": "es5",
 		"noImplicitAny": false,
-        "removeComments": true,
-        "noLib": false,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "sourceMap": true,
+		"removeComments": true,
+		"noLib": false,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"sourceMap": true,
 		"moduleResolution": "node",
-		"noEmitHelpers": true
+		"noEmitHelpers": false,
+		"importHelpers": true
 	},
 	"compileOnSave": false,
 	"include": [
