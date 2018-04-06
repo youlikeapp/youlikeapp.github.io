@@ -101,7 +101,8 @@
 						</a>
 					</md-list-item>
 				</md-list>
-				<md-collection-pagination collection="$ctrl.lastCheckingResult.withoutLikes" 
+				<md-collection-pagination ng-if="$ctrl.lastCheckingResult.withoutLikes" 
+					collection="$ctrl.lastCheckingResult.withoutLikes" 
 					paginated-collection="$ctrl.lastCheckingResult.withoutLikesShown">
 				</md-collection-pagination> 
 			</md-dialog-content>
@@ -129,7 +130,8 @@
 						</p>
 					</md-list-item>
 				</md-list>
-				<md-collection-pagination collection="$ctrl.lastFailedVideos" 
+				<md-collection-pagination ng-if="$ctrl.lastFailedVideos" 
+					collection="$ctrl.lastFailedVideos" 
 					paginated-collection="$ctrl.lastFailedVideosShown">
 				</md-collection-pagination> 
 			</md-dialog-content>

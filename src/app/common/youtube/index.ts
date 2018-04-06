@@ -69,7 +69,7 @@ const YouTube: ng.IModule = angular
             };
 
             $delegate.checkVideos = youtubeWrapper($delegate.checkVideos, 60);
-            $delegate.setRating = youtubeWrapper($delegate.setRating, 60 * 60 * 6);
+            $delegate.setRating = youtubeWrapper($delegate.setRating, 60 * 5);
 
             return $delegate;
         });

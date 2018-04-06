@@ -78,21 +78,22 @@ class MainController implements ng.IComponentController {
 
         this.clearStats();
 
-        this.lastSuccessedVideos = [];
-        this.lastFailedVideos = [];
+        let lastSuccessedVideos: string[] = [];
+        let lastFailedVideos: { id: string; errorMsg: string }[] = [];
 
         try {
             this.youtubeService.setRating(lastCheckingResult.withoutLikes, "like",
             (videoId: string) => {
-                this.lastSuccessedVideos.push(videoId);
-
-                this.$scope.$apply();
+                lastSuccessedVideos.push(videoId);
             },
             (videoId: string, errorMsg: string) => {
-                this.lastFailedVideos.push({ id: videoId, errorMsg: errorMsg });
+                lastFailedVideos.push({ id: videoId, errorMsg: errorMsg });
+            }).then(() => {
+                this.lastSuccessedVideos = lastSuccessedVideos;
+                this.lastFailedVideos = lastFailedVideos;
 
-                this.$scope.$apply();
-            }).then(() => this.$scope.$apply(() => this.blockUI.stop()));
+                this.$scope.$apply(() => this.blockUI.stop());
+            });
         } catch {
             this.clearStats();
             this.blockUI.stop();
@@ -112,6 +113,8 @@ class MainController implements ng.IComponentController {
             contentElement: `#${id}`,
             parent: document.body
         });
+
+        console.log((<any>this).lastFailedVideosShown);
     }
 
     public closeDialog(): void {
