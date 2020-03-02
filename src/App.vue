@@ -2,7 +2,7 @@
     <div id="app">
         <img alt="Vue logo" src="./assets/logo.png" />
         <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
-        <router-link to="/">/</router-link>
+        <router-link :to="{ name: '/' }">/</router-link>
         <router-link :to="{ name: 'home' }">Home</router-link>
         <router-link :to="{ name: 'about' }">About</router-link>
 
