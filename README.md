@@ -43,3 +43,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 -   Prop names should always use camelCase during declaration, but kebab-case in templates and JSX.
 
 -   Directive shorthands (: for v-bind:, @ for v-on: and # for v-slot) should be used always or never.
+
+### git
+
+git checkout <feature_branch>
+git branch
+git remote show origin
