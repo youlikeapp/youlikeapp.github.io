@@ -9,6 +9,9 @@ import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faOdnoklassniki } from '@fortawesome/free-brands-svg-icons';
 import { faGooglePlus } from '@fortawesome/free-brands-svg-icons';
 import { faTelegram } from '@fortawesome/free-brands-svg-icons';
+import { faChrome } from '@fortawesome/free-brands-svg-icons';
+import { faFirefox } from '@fortawesome/free-brands-svg-icons';
+import { faOpera } from '@fortawesome/free-brands-svg-icons';
 
 export default function setUpFontAwesome() {
     library.add(
@@ -17,7 +20,10 @@ export default function setUpFontAwesome() {
         faFacebook,
         faOdnoklassniki,
         faGooglePlus,
-        faTelegram
+        faTelegram,
+        faChrome,
+        faOpera,
+        faFirefox
     );
-    Vue.component('font-awesome-icon', FontAwesomeIcon);
+    Vue.component('fa', FontAwesomeIcon);
 }

@@ -42,29 +42,27 @@
                 >
                     <div>
                         <network network="vk">
-                            <font-awesome-icon :icon="['fab', 'vk']" />
+                            <fa :icon="['fab', 'vk']" />
                             VKontakte
                         </network>
                         <network network="twitter">
-                            <font-awesome-icon :icon="['fab', 'twitter']" />
+                            <fa :icon="['fab', 'twitter']" />
                             Twitter
                         </network>
                         <network network="facebook">
-                            <font-awesome-icon :icon="['fab', 'facebook']" />
+                            <fa :icon="['fab', 'facebook']" />
                             Facebook
                         </network>
                         <network network="odnoklassniki">
-                            <font-awesome-icon
-                                :icon="['fab', 'odnoklassniki']"
-                            />
+                            <fa :icon="['fab', 'odnoklassniki']" />
                             Odnoklassniki
                         </network>
                         <network network="googleplus">
-                            <font-awesome-icon :icon="['fab', 'google-plus']" />
+                            <fa :icon="['fab', 'google-plus']" />
                             Google +
                         </network>
                         <network network="telegram">
-                            <font-awesome-icon :icon="['fab', 'telegram']" />
+                            <fa :icon="['fab', 'telegram']" />
                             Telegram
                         </network>
                     </div>
