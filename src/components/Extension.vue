@@ -33,10 +33,9 @@
             <div>
                 <p>
                     Модераторы Opera рассматривают расширение
-                    <span class="strikethrough"
-                        >дольше президентского срока Путина</span
-                    >, но уже сейчас его можно установить из Chrome Web Store.
-                    Для этого нужно сначала установить
+                    <span>дольше президентского срока Путина</span>, но уже
+                    сейчас его можно установить из Chrome Web Store. Для этого
+                    нужно сначала установить
                     <a
                         href="https://addons.opera.com/ru/extensions/details/download-chrome-extension-9/"
                         target="_blank"
