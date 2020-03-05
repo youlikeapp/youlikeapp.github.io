@@ -1,12 +1,11 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
+import setUpPlugins from './plugins-config';
 
-const SocialSharing = require('vue-social-sharing');
+setUpPlugins();
 
 Vue.config.productionTip = false;
-
-Vue.use(SocialSharing);
 
 new Vue({
     router,
