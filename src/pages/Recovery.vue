@@ -1,0 +1,296 @@
+<template>
+    <div>
+        <div layout-padding layout="column">
+            <h1 class="md-headline">Восстановление лайков</h1>
+            <div class="md-body-1">
+                <div layout="row" layout-xs="column" layout-padding>
+                    <md-content flex="70" flex-xs="100">
+                        <md-input-container class="md-block">
+                            <label
+                                >Список видео (идентификаторы или полные
+                                ссылки)</label
+                            >
+                            <textarea
+                                id="videosListTextArea"
+                                required
+                                rows="12"
+                                md-no-autogrow
+                                ng-class="$ctrl.videosListIsEmpty && 'list-empty'"
+                                ng-model="$ctrl.videosList"
+                                ng-focus="$ctrl.onListFocus()"
+                                ng-blur="$ctrl.onListBlur()"
+                                ng-change="$ctrl.onListChange()"
+                            ></textarea>
+                        </md-input-container>
+                        <div layout-xs="column">
+                            <md-button
+                                class="md-primary md-raised"
+                                ng-disabled="$ctrl.videosListIsEmpty"
+                                ng-click="$ctrl.checkVideos()"
+                                ><md-icon class="material-icons"
+                                    >&#xE065;</md-icon
+                                >
+                                Проверить</md-button
+                            >
+                            <md-button
+                                class="md-raised"
+                                ng-disabled="$ctrl.videosListIsEmpty"
+                                id="saveListBtn"
+                                ng-click="$ctrl.saveList()"
+                                ><md-icon class="material-icons"
+                                    >&#xE161;</md-icon
+                                >
+                                Сохранить</md-button
+                            >
+                            <md-button
+                                class="md-raised"
+                                ng-if="$ctrl.hasVideosInStorage"
+                                ng-click="$ctrl.loadList()"
+                            >
+                                <md-icon class="material-icons"
+                                    >&#xE929;</md-icon
+                                >
+                                Загрузить
+                            </md-button>
+                            <md-button
+                                class="md-raised md-accent"
+                                ng-if="$ctrl.hasVideosInStorage"
+                                ng-click="$ctrl.showDialog('confirmDeleteDialog')"
+                            >
+                                <md-icon class="material-icons"
+                                    >&#xE872;</md-icon
+                                >
+                                Удалить
+                            </md-button>
+                        </div>
+                    </md-content>
+                    <md-content ng-if="$ctrl.lastCheckingResult">
+                        <h3>Результат проверки</h3>
+                        <p>
+                            Всего проверено:
+                            {{
+                                $ctrl.lastCheckingResult.withLikes.length +
+                                    $ctrl.lastCheckingResult.withoutLikes.length
+                            }}
+                        </p>
+                        <p>
+                            С лайками:
+                            {{ $ctrl.lastCheckingResult.withLikes.length }}
+                        </p>
+                        <p>
+                            Без лайков:
+                            {{ $ctrl.lastCheckingResult.withoutLikes.length }}
+                        </p>
+                        <div
+                            ng-if="$ctrl.lastCheckingResult.withoutLikes.length > 0"
+                            layout-xs="column"
+                        >
+                            <md-button
+                                class="md-raised"
+                                ng-click="$ctrl.showDialog('videosWithoutLikesDialog')"
+                            >
+                                <md-icon class="material-icons"
+                                    >&#xE417;</md-icon
+                                >
+                                Показать видео без лайков
+                            </md-button>
+                            <md-button
+                                class="md-primary md-raised"
+                                ng-click="$ctrl.setLikes()"
+                            >
+                                <md-icon class="material-icons"
+                                    >&#xE8DC;</md-icon
+                                >
+                                Поставить лайки
+                            </md-button>
+                        </div>
+                    </md-content>
+                    <md-content
+                        ng-if="$ctrl.lastSuccessedVideos || $ctrl.lastFailedVideos"
+                    >
+                        <h3>Результат выставления лайков</h3>
+                        <p>
+                            Проставлено: {{ $ctrl.lastSuccessedVideos.length }}
+                        </p>
+                        <p>
+                            Не проставлено: {{ $ctrl.lastFailedVideos.length }}
+                        </p>
+                        <p>
+                            <strong>Лайки могут появиться с задержкой.</strong>
+                        </p>
+                        <div
+                            ng-if="$ctrl.lastFailedVideos.length > 0"
+                            layout-xs="column"
+                        >
+                            <md-button
+                                class="md-raised md-accent"
+                                ng-click="$ctrl.showDialog('failedVideosDialog')"
+                            >
+                                <md-icon class="material-icons"
+                                    >&#xE417;</md-icon
+                                >
+                                Показать ошибки
+                            </md-button>
+                        </div>
+                    </md-content>
+                    <a id="{{ $ctrl.bottomId }}"></a>
+                </div>
+            </div>
+        </div>
+        <input id="forceUpdate" type="hidden" ng-click="$ctrl.forceUpdate()" />
+        <div class="dialog-container">
+            <div class="md-dialog-container" id="confirmDeleteDialog">
+                <md-dialog
+                    md-theme="default"
+                    aria-label="Подтверждение действия"
+                    ng-class="dialog.css"
+                    role="dialog"
+                    tabindex="-1"
+                >
+                    <md-dialog-content
+                        class="md-dialog-content"
+                        role="document"
+                        tabindex="-1"
+                    >
+                        <h2>Подтверждение действия</h2>
+                        <div>
+                            <p>Вы уверены, что хотите удалить список видео?</p>
+                        </div>
+                    </md-dialog-content>
+                    <md-dialog-actions>
+                        <md-button
+                            class="md-primary md-cancel-button"
+                            ng-click="$ctrl.closeDialog()"
+                        >
+                            <span>Нет</span>
+                        </md-button>
+                        <md-button
+                            class="md-primary md-raised md-accent md-confirm-button"
+                            ng-click="$ctrl.clearList()"
+                        >
+                            <span>Да</span>
+                        </md-button>
+                    </md-dialog-actions>
+                </md-dialog>
+            </div>
+        </div>
+        <div class="dialog-container">
+            <div class="md-dialog-container" id="videosWithoutLikesDialog">
+                <md-dialog
+                    md-theme="default"
+                    aria-label="Список видео без лайков"
+                    ng-class="dialog.css"
+                    role="dialog"
+                    tabindex="-1"
+                >
+                    <md-toolbar class="md-toolbar-tools">
+                        <h2>Список видео без лайков</h2>
+                        <span flex></span>
+                        <md-button
+                            class="md-icon-button"
+                            ng-click="$ctrl.closeDialog()"
+                        >
+                            <md-icon class="material-icons">&#xE5CD;</md-icon>
+                        </md-button>
+                    </md-toolbar>
+                    <md-dialog-content
+                        class="md-dialog-content"
+                        role="document"
+                        tabindex="-1"
+                    >
+                        <md-list>
+                            <md-list-item
+                                ng-repeat="video in $ctrl.lastCheckingResult.withoutLikesShown"
+                            >
+                                <a
+                                    ng-href="https://www.youtube.com/watch?v={{ ::video }}"
+                                    target="_blank"
+                                >
+                                    https://www.youtube.com/watch?v={{ ::video }}
+                                </a>
+                            </md-list-item>
+                        </md-list>
+                        <md-collection-pagination
+                            ng-if="$ctrl.lastCheckingResult.withoutLikes"
+                            collection="$ctrl.lastCheckingResult.withoutLikes"
+                            paginated-collection="$ctrl.lastCheckingResult.withoutLikesShown"
+                        >
+                        </md-collection-pagination>
+                    </md-dialog-content>
+                </md-dialog>
+            </div>
+        </div>
+        <div class="dialog-container">
+            <div class="md-dialog-container" id="failedVideosDialog">
+                <md-dialog
+                    md-theme="default"
+                    aria-label="Список видео, на которых не удалось восстановить лайки"
+                    ng-class="dialog.css"
+                    role="dialog"
+                    tabindex="-1"
+                >
+                    <md-toolbar class="md-toolbar-tools">
+                        <h2>Ошибки</h2>
+                        <span flex></span>
+                        <md-button
+                            class="md-icon-button"
+                            ng-click="$ctrl.closeDialog()"
+                        >
+                            <md-icon class="material-icons">&#xE5CD;</md-icon>
+                        </md-button>
+                    </md-toolbar>
+                    <md-dialog-content
+                        class="md-dialog-content"
+                        role="document"
+                        tabindex="-1"
+                    >
+                        <md-list>
+                            <md-list-item
+                                ng-repeat="video in $ctrl.lastFailedVideosShown"
+                            >
+                                <p>
+                                    <a
+                                        ng-href="https://www.youtube.com/watch?v={{ ::video.id }}"
+                                        target="_blank"
+                                    >
+                                        {{ ::video.id }} </a
+                                    >:
+                                    {{
+                                        ::video.errorMsg || 'Неизвестная ошибка'
+                                    }}
+                                </p>
+                            </md-list-item>
+                        </md-list>
+                        <md-collection-pagination
+                            ng-if="$ctrl.lastFailedVideos"
+                            collection="$ctrl.lastFailedVideos"
+                            paginated-collection="$ctrl.lastFailedVideosShown"
+                        >
+                        </md-collection-pagination>
+                    </md-dialog-content>
+                </md-dialog>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data: () => {
+        return {
+            videosList = '',
+            videosListIsEmpty = false,
+            lastCheckingResult = null,
+            lastSuccessedVideos = [],
+            lastFailedVideos = [],
+        };
+    },
+    created: () => {
+        this.bottomId = 'bottom';
+        this.listPlaceholder =
+            'Example of filling: \ nhttps: //www.youtube.com/watch? v = TadQGyFWPHc \ nhttps: //www.youtube.com/watch? v = DnQd2wQRoJ0 \ nqmLJvTiL_Rw';
+    },
+};
+</script>
+
+<style></style>

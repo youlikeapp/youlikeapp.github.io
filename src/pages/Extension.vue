@@ -8,7 +8,7 @@
                 кнопку "Добавить в YouLike", расположенную под кнопками лайка и
                 дизлайка.
             </p>
-            <h2><fa :icon="['fab', 'chrome']" /> Google Chrome</h2>
+            <h2><q-icon name="fab fa-chrome" /> Google Chrome</h2>
             <p>
                 <a
                     href="https://chrome.google.com/webstore/detail/youlike-%D0%B2%D0%BE%D1%81%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BB%D0%B0/bpnhjhdmbhnjkhemgmfahahohblnombi"
@@ -20,7 +20,7 @@
             <p>
                 По этой же ссылке можно установить расширение для Я.Браузер.
             </p>
-            <h2><fa :icon="['fab', 'firefox']" /> Mozilla Firefox</h2>
+            <h2><q-icon name="fab fa-firefox" /> Mozilla Firefox</h2>
             <p>
                 <a
                     href="https://addons.mozilla.org/ru/firefox/addon/youlike-%D0%B2%D0%BE%D1%81%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BB%D0%B0%D0%B9%D0%BA%D0%BE%D0%B2/"
@@ -29,7 +29,7 @@
                     Установить расширение для Mozilla Firefox
                 </a>
             </p>
-            <h2><fa :icon="['fab', 'opera']" /> Opera</h2>
+            <h2><q-icon name="fab fa-opera" /> Opera</h2>
             <div>
                 <p>
                     Модераторы Opera рассматривают расширение

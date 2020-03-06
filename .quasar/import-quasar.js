@@ -12,7 +12,7 @@
 
 import lang from 'quasar/lang/en-us'
 
-import iconSet from 'quasar/icon-set/material-icons'
+import iconSet from 'quasar/icon-set/fontawesome-v5'
 
 
 import Vue from 'vue'

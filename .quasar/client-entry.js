@@ -12,9 +12,9 @@
 
 
 
-import '@quasar/extras/roboto-font/roboto-font.css'
+import '@quasar/extras/fontawesome-v5/fontawesome-v5.css'
 
-import '@quasar/extras/material-icons/material-icons.css'
+import '@quasar/extras/roboto-font/roboto-font.css'
 
 
 
@@ -36,9 +36,9 @@ import createApp from './app.js'
 
 import qboot_Booti18n from 'boot/i18n'
 
-import qboot_Bootfontawesome from 'boot/fontawesome'
-
 import qboot_Bootvuesocialsharing from 'boot/vue-social-sharing'
+
+import qboot_Bootfontawesome from 'boot/fontawesome'
 
 
 
@@ -70,7 +70,7 @@ async function start () {
   }
 
   const urlPath = window.location.href.replace(window.location.origin, '')
-  const bootFiles = [qboot_Booti18n,qboot_Bootfontawesome,qboot_Bootvuesocialsharing]
+  const bootFiles = [qboot_Booti18n,qboot_Bootvuesocialsharing,qboot_Bootfontawesome]
 
   for (let i = 0; routeUnchanged === true && i < bootFiles.length; i++) {
     if (typeof bootFiles[i] !== 'function') {
