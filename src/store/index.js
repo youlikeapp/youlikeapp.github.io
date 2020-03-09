@@ -1,29 +1,46 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-// import example from './module-example'
+import * as type from './mutation-types';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Store instance.
- */
-
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    modules: {
-      // example
+const initialState = {
+    user: {
+        name: 'Anonymous User',
+        image: 'far fa-user',
+        isSignedIn: false,
     },
+};
 
-    // enable strict mode (adds overhead!)
-    // for dev mode only
-    strict: process.env.DEV
-  })
+export default function(/* { ssrContext } */) {
+    const Store = new Vuex.Store({
+        state: { ...initialState },
+        mutations: {
+            [type.SIGN_IN](state, user) {
+                state.user = { ...user };
+            },
+            [type.LOG_OFF](state, user) {
+                state.user = { ...user };
+            },
+        },
+        actions: {
+            [type.SIGN_IN]({ commit }) {
+                setTimeout(() => {
+                    commit(type.SIGN_IN, {
+                        name: 'Mateusz Garbaciak',
+                        image: 'img:statics/photo.png',
+                    });
+                }, 500);
+            },
+            [type.LOG_OFF]() {
+                setTimeout(() => {
+                    this.commit(type.LOG_OFF, initialState.user);
+                }, 500);
+            },
+        },
+        strict: process.env.DEV,
+    });
 
-  return Store
+    return Store;
 }

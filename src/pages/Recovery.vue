@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div layout-padding layout="column">
+        <!-- <div layout-padding layout="column">
             <h1 class="md-headline">Восстановление лайков</h1>
             <div class="md-body-1">
                 <div layout="row" layout-xs="column" layout-padding>
@@ -270,7 +270,7 @@
                     </md-dialog-content>
                 </md-dialog>
             </div>
-        </div>
+        </div>-->
     </div>
 </template>
 
@@ -278,17 +278,17 @@
 export default {
     data: () => {
         return {
-            videosList = '',
-            videosListIsEmpty = false,
-            lastCheckingResult = null,
-            lastSuccessedVideos = [],
-            lastFailedVideos = [],
+            videosList: '',
+            videosListIsEmpty: false,
+            lastCheckingResult: null,
+            lastSuccessedVideos: [],
+            lastFailedVideos: [],
         };
     },
     created: () => {
         this.bottomId = 'bottom';
         this.listPlaceholder =
-            'Example of filling: \ nhttps: //www.youtube.com/watch? v = TadQGyFWPHc \ nhttps: //www.youtube.com/watch? v = DnQd2wQRoJ0 \ nqmLJvTiL_Rw';
+            'Example of filling:  nhttps: //www.youtube.com/watch? v = TadQGyFWPHc  nhttps: //www.youtube.com/watch? v = DnQd2wQRoJ0  nqmLJvTiL_Rw';
     },
 };
 </script>

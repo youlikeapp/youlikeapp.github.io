@@ -1,5 +1,9 @@
 <template>
-    <div class="q-pa-md doc-container">
+    <div>
+        <google-sign-in />
+        <router-view />
+    </div>
+    <!-- <div class="q-pa-md doc-container">
         <div class="row justify-center">
             <div class="col-xs-12">
                 <div class="q-pa-md q-gutter-sm">
@@ -55,7 +59,15 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 </template>
 
-<script></script>
+<script>
+import GoogleSignIn from '../components/google-sign-in';
+
+export default {
+    components: {
+        GoogleSignIn,
+    },
+};
+</script>
