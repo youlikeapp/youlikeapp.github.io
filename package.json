@@ -11,7 +11,7 @@
         "serve": "quasar dev",
         "lint": "eslint --ext .js,.vue src",
         "test": "quasar test --unit jest",
-        "build": "quasar build --debug"
+        "build": "quasar build --debug && node post-build-script.js"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.27",
