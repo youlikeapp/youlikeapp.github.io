@@ -32,10 +32,13 @@ export default function(/* { ssrContext } */) {
                     commit(type.SIGN_IN, { name, image, isSignedIn: true });
                 });
             },
-            [type.LOG_OFF]() {
+            [type.LOG_OFF]({ commit }) {
                 googleApiService.logOff().then(() => {
                     commit(type.LOG_OFF, { ...initialState.user });
                 });
+            },
+            [type.SET_UP_GOOGLE_CLIENT_ID]() {
+                googleApiService.setUp();
             },
         },
         strict: process.env.DEV,
