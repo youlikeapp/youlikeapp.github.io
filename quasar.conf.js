@@ -6,10 +6,15 @@ module.exports = function(ctx) {
         // app boot file (/src/boot)
         // --> boot files are part of "main.js"
         // https://quasar.dev/quasar-cli/cli-documentation/boot-files
-        boot: ['i18n', 'vue-social-sharing', 'fontawesome'],
+        boot: [
+            'i18n',
+            'vue-social-sharing',
+            'fontawesome',
+            'vue-plugin-load-script',
+        ],
 
         // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
-        css: ['app.sass'],
+        // css: ['app.sass'],
 
         // https://github.com/quasarframework/quasar/tree/dev/extras
         extras: [
@@ -52,7 +57,7 @@ module.exports = function(ctx) {
         // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
         build: {
             vueRouterMode: 'hash', // available values: 'hash', 'history'
-
+            distDir: 'dist', // [override default] builds spa only, for different options, should be removed
             // showProgress: false,
             // gzip: true,
             // analyze: true,
