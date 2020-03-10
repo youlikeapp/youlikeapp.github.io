@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 
 import * as type from './mutation-types';
 
+import googleApiService from '../services/google-api.service';
+
 Vue.use(Vuex);
 
 const initialState = {
@@ -26,17 +28,14 @@ export default function(/* { ssrContext } */) {
         },
         actions: {
             [type.SIGN_IN]({ commit }) {
-                setTimeout(() => {
-                    commit(type.SIGN_IN, {
-                        name: 'Mateusz Garbaciak',
-                        image: 'img:statics/photo.png',
-                    });
-                }, 500);
+                googleApiService.signIn().then(({ name, image }) => {
+                    commit(type.SIGN_IN, { name, image, isSignedIn: true });
+                });
             },
             [type.LOG_OFF]() {
-                setTimeout(() => {
-                    this.commit(type.LOG_OFF, initialState.user);
-                }, 500);
+                googleApiService.logOff().then(() => {
+                    commit(type.LOG_OFF, { ...initialState.user });
+                });
             },
         },
         strict: process.env.DEV,
