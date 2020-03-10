@@ -1,13 +1,27 @@
 <template>
     <div>
-        <q-avatar :size="'120px'" :color="'primary'" v-bind:class="{ blur: isLoading }">
-            <q-icon class="icon--size" v-bind:name="user.image" />
-            <!-- <img src="https://cdn.quasar.dev/img/avatar.png" /> -->
-        </q-avatar>
-        <span v-bind:class="{ blur: isLoading }">{{ user.name }}</span>
-
-        <button v-if="!isSignedIn" v-on:click="signIn" v-bind:disabled="isLoading">Sign In</button>
-        <button v-if="isSignedIn" v-on:click="logOff" v-bind:disabled="isLoading">Log Off</button>
+        <q-card class="my-card" style=" width: 120px">
+            <q-avatar :size="'120px'" :color="'primary'" v-bind:class="{ blur: isLoading }">
+                <q-icon class="icon--size" v-bind:name="user.image" />
+            </q-avatar>
+            <div v-bind:class="{ blur: isLoading }">
+                <div class="text-subtitle2">{{ user.name }}</div>
+            </div>
+            <q-card-actions>
+                <q-btn
+                    flat
+                    v-if="!isSignedIn"
+                    v-on:click="signIn"
+                    v-bind:disabled="isLoading"
+                >Sign In</q-btn>
+                <q-btn
+                    flat
+                    v-if="isSignedIn"
+                    v-on:click="logOff"
+                    v-bind:disabled="isLoading"
+                >Log Off</q-btn>
+            </q-card-actions>
+        </q-card>
     </div>
 </template>
 
