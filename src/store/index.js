@@ -38,7 +38,18 @@ export default function(/* { ssrContext } */) {
                 });
             },
             [type.SET_UP_GOOGLE_CLIENT_ID]() {
-                googleApiService.setUp();
+                googleApiService.getAuthInstance().then(authInstance => {
+                    const currentUser = authInstance.currentUser
+                        .get()
+                        .getBasicProfile();
+                    const isSignedIn = authInstance.isSignedIn.get();
+
+                    console.log(
+                        'set up google client id',
+                        currentUser,
+                        isSignedIn
+                    );
+                });
             },
         },
         strict: process.env.DEV,

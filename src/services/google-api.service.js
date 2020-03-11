@@ -1,3 +1,9 @@
+const clientConfiguration = {
+    clientId:
+        '830004684171-h17li43l6bp0j7nf1ln7slv3v6bdcvl0.apps.googleusercontent.com',
+    scope: 'https://www.googleapis.com/auth/youtube',
+};
+
 function signIn() {
     return new Promise(resolve => {
         setTimeout(() => {
@@ -20,24 +26,20 @@ function logOff() {
     });
 }
 
-function setUp() {
-    return gapi.load('client:auth2', () => {
-        gapi.client
-            .init({
-                clientId:
-                    '830004684171-h17li43l6bp0j7nf1ln7slv3v6bdcvl0.apps.googleusercontent.com',
-                scope: 'https://www.googleapis.com/auth/youtube',
-            })
-            .then(() => {
-                console.log('authenticated');
+function getAuthInstance() {
+    return new Promise(resolve => {
+        gapi.load('client:auth2', () => {
+            gapi.client.init(clientConfiguration).then(() => {
+                resolve(gapi.auth2.getAuthInstance());
             });
+        });
     });
 }
 
 const googleApiService = {
     signIn,
     logOff,
-    setUp,
+    getAuthInstance,
 };
 
 export default googleApiService;
