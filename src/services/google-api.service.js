@@ -21,11 +21,11 @@ function logOff() {
 }
 
 function setUp() {
-    gapi.load('client:auth2', () => {
+    return gapi.load('client:auth2', () => {
         gapi.client
             .init({
                 clientId:
-                    '871050293069-eqou5jodn7u9tahldd0jqdhu10mlk13f.apps.googleusercontent.com',
+                    '830004684171-h17li43l6bp0j7nf1ln7slv3v6bdcvl0.apps.googleusercontent.com',
                 scope: 'https://www.googleapis.com/auth/youtube',
             })
             .then(() => {
