@@ -28,26 +28,36 @@ export default function(/* { ssrContext } */) {
         },
         actions: {
             [type.SIGN_IN]({ commit }) {
-                googleApiService.signIn().then(({ name, image }) => {
-                    commit(type.SIGN_IN, { name, image, isSignedIn: true });
-                });
+                googleApiService.signIn().then(
+                    ({ name, image }) => {
+                        commit(type.SIGN_IN, {
+                            name,
+                            image: image,
+                            isSignedIn: true,
+                        });
+                    },
+                    () => {
+                        commit(type.LOG_OFF, { ...initialState.user });
+                    }
+                );
             },
-            [type.LOG_OFF]({ commit }) {
-                googleApiService.logOff().then(() => {
-                    commit(type.LOG_OFF, { ...initialState.user });
-                });
+            [type.LOG_OFF]() {
+                googleApiService.logOff();
             },
-            [type.SET_UP_GOOGLE_CLIENT_ID]() {
-                googleApiService.getAuthInstance().then(authInstance => {
-                    const currentUser = authInstance.currentUser
-                        .get()
-                        .getBasicProfile();
-                    const isSignedIn = authInstance.isSignedIn.get();
-
-                    console.log(
-                        'set up google client id',
-                        currentUser,
-                        isSignedIn
+            [type.SET_UP_GOOGLE_AUTHENTICATION_API]({ commit }) {
+                googleApiService.setUpAuthInstance().then(() => {
+                    googleApiService.listenToSignedInChanges(
+                        ({ isSignedIn, user }) => {
+                            if (isSignedIn) {
+                                commit(type.SIGN_IN, {
+                                    name: user.name,
+                                    image: user.image,
+                                    isSignedIn,
+                                });
+                            } else {
+                                commit(type.LOG_OFF, { ...initialState.user });
+                            }
+                        }
                     );
                 });
             },

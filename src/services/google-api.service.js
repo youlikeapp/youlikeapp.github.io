@@ -3,34 +3,52 @@ const clientConfiguration = {
         '830004684171-h17li43l6bp0j7nf1ln7slv3v6bdcvl0.apps.googleusercontent.com',
     scope: 'https://www.googleapis.com/auth/youtube',
 };
+const oauthClient = 'client:auth2';
+
+let authInstance;
 
 function signIn() {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                name: 'Mateusz Garbaciak',
-                image: 'img:statics/photo.png',
-            });
-        }, 1000);
+    return new Promise((resolve, reject) => {
+        authInstance.signIn().then(
+            ({ Qt }) => {
+                const { Ad: name, jL: image } = Qt;
+                resolve({ name, image });
+            },
+            () => {
+                reject();
+            }
+        );
     });
 }
 
 function logOff() {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                name: '',
-                image: '',
-            });
-        }, 1000);
+    authInstance.signOut();
+}
+
+function listenToSignedInChanges(callback) {
+    if (authInstance.isSignedIn.ie) {
+        callback({ isSignedIn: true, user: getSignedInUser() });
+    }
+    authInstance.isSignedIn.listen(isSignedIn => {
+        const user = isSignedIn ? getSignedInUser() : null;
+        callback({ isSignedIn, user });
     });
 }
 
-function getAuthInstance() {
+function getSignedInUser() {
+    const {
+        Ad: name,
+        jL: image,
+    } = authInstance.currentUser.get().getBasicProfile();
+    return { name, image };
+}
+
+function setUpAuthInstance() {
     return new Promise(resolve => {
-        gapi.load('client:auth2', () => {
+        gapi.load(oauthClient, () => {
             gapi.client.init(clientConfiguration).then(() => {
-                resolve(gapi.auth2.getAuthInstance());
+                authInstance = gapi.auth2.getAuthInstance();
+                resolve(authInstance);
             });
         });
     });
@@ -39,7 +57,8 @@ function getAuthInstance() {
 const googleApiService = {
     signIn,
     logOff,
-    getAuthInstance,
+    listenToSignedInChanges,
+    setUpAuthInstance,
 };
 
 export default googleApiService;

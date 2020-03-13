@@ -28,6 +28,10 @@
 <script>
 import { SIGN_IN, LOG_OFF } from '../store/mutation-types';
 
+function appendPrefixIfImage(image) {
+    return /jpg|jpeg|png&/gi.test(image) ? 'img:' + image : image;
+}
+
 export default {
     data: function() {
         return {
@@ -47,7 +51,9 @@ export default {
     },
     computed: {
         user() {
-            return this.$store.state.user;
+            const { name, image } = this.$store.state.user;
+            const i = appendPrefixIfImage(image);
+            return { name, image: i };
         },
     },
     methods: {
