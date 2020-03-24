@@ -1,3 +1,10 @@
+const publicApi = {
+    setUpAuthInstance,
+    signIn,
+    logOff,
+    listenToSignedInChanges,
+};
+
 const clientConfiguration = {
     clientId: '830004684171-h17li43l6bp0j7nf1ln7slv3v6bdcvl0.apps.googleusercontent.com',
     scope: 'https://www.googleapis.com/auth/youtube',
@@ -49,11 +56,5 @@ function getSignedInUser() {
     return { name, image };
 }
 
-const googleApiService = {
-    setUpAuthInstance,
-    signIn,
-    logOff,
-    listenToSignedInChanges,
-};
-
+const googleApiService = publicApi;
 export default googleApiService;

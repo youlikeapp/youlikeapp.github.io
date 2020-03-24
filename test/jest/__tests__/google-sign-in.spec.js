@@ -18,8 +18,8 @@ describe('GoogleSignIn', () => {
     let actions;
 
     actions = {
-        actionClick: jest.fn(),
-        actionInput: jest.fn(),
+        [SIGN_IN]: jest.fn(),
+        [LOG_OFF]: jest.fn(),
     };
     store = new Vuex.Store({
         state: {
@@ -35,5 +35,17 @@ describe('GoogleSignIn', () => {
 
     it('Should create', () => {
         expect(wrapper).toBeDefined();
+    });
+
+    it('Should show Sign In button on init', () => {
+        const btnText = wrapper.find(QBtn).text();
+
+        expect(btnText).toEqual('Sign In');
+    });
+
+    it('Should dispatch sign in action on click', () => {
+        wrapper.find(QBtn).trigger('click');
+
+        expect(actions[SIGN_IN]).toHaveBeenCalled();
     });
 });

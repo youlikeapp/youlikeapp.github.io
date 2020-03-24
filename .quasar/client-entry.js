@@ -25,8 +25,6 @@ import 'quasar/dist/quasar.sass'
 
 
 
-import 'src/css/app.sass'
-
 
 import Vue from 'vue'
 import createApp from './app.js'
@@ -39,6 +37,8 @@ import qboot_Booti18n from 'boot/i18n'
 import qboot_Bootvuesocialsharing from 'boot/vue-social-sharing'
 
 import qboot_Bootfontawesome from 'boot/fontawesome'
+
+import qboot_Bootvuepluginloadscript from 'boot/vue-plugin-load-script'
 
 
 
@@ -70,7 +70,7 @@ async function start () {
   }
 
   const urlPath = window.location.href.replace(window.location.origin, '')
-  const bootFiles = [qboot_Booti18n,qboot_Bootvuesocialsharing,qboot_Bootfontawesome]
+  const bootFiles = [qboot_Booti18n,qboot_Bootvuesocialsharing,qboot_Bootfontawesome,qboot_Bootvuepluginloadscript]
 
   for (let i = 0; routeUnchanged === true && i < bootFiles.length; i++) {
     if (typeof bootFiles[i] !== 'function') {

@@ -57,7 +57,7 @@ module.exports = function(ctx) {
         // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
         build: {
             vueRouterMode: 'hash', // available values: 'hash', 'history'
-            distDir: 'dist', // [override default] builds spa only, for different options, should be removed
+            distDir: 'dist', // [override default] builds spa only, for different options, should be removed after migration end
             // showProgress: false,
             // gzip: true,
             // analyze: true,
