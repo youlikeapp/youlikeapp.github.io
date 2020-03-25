@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import GoogleSignIn from '../components/google-sign-in';
+import GoogleSignIn from '../components/GoogleSignIn';
 
 export default {
     components: {
