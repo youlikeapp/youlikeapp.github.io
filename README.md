@@ -5,9 +5,7 @@ url to gh pages:
 
 ### Vue style guide notes:
 
--   Base components (a.k.a. presentational, dumb, or pure components) that apply app-specific styling and conventions should all begin with a specific prefix, such as Base, App, or V.
-    MyButton (wrong),
-    VButton, AppButton, BaseButton (fine)
+-   Presentational components begin with V prefix: VButton
 
 -   Components that should only ever have a single active instance should begin with the The prefix, to denote that there can be only one.
 

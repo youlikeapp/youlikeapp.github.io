@@ -1,6 +1,8 @@
 <template>
     <div>
+        <button v-on:click="addVideo()">test add</button>
         <v-main-content-video-list-input
+            v-bind:videos="videos"
             @check-videos="checkVideos()"
             @save-list="saveList()"
             @load-list="loadList()"
@@ -16,6 +18,9 @@ import VMainContentRecoverySummary from './VMainContentRecoverySummary';
 import VMainContentVideoErrors from './VMainContentVideoErrors';
 
 export default {
+    data: function() {
+        return { videos: ['www.youtube.com/1234', 'www.youtube.com/235', 'www.youtube.com/acdef'] };
+    },
     components: {
         VMainContentVideoListInput,
         VMainContentRecoverySummary,
@@ -30,6 +35,9 @@ export default {
         },
         loadList: function() {
             console.log('@load-list');
+        },
+        addVideo: function() {
+            this.videos = [...this.videos, 'www.youtube.pl/xyz'];
         },
     },
 };

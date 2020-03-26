@@ -19,7 +19,7 @@
                 <span>Поставить лайки</span>
             </button>
         </div>
-        <v-main-content-recovery-summary-withoutLikes />
+        <v-main-content-recovery-summary-without-likes />
     </div>
 </template>
 

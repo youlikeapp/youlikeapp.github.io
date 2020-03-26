@@ -8,7 +8,7 @@
                     <div>
                         <!-- <md-input-container class="md-block"> -->
                         <label>Список видео (идентификаторы или полные ссылки)</label>
-                        <textarea name="videosListTextArea" id cols="30" rows="10"></textarea>
+                        <q-input v-model="videosString" filled autogrow />
                         <!-- <textarea
                                 id="videosListTextArea"
                                 required
@@ -22,32 +22,12 @@
                         <!-- </md-input-container> -->
                     </div>
                     <div>
-                        <button v-on:click="checkVideos()">
-                            <!-- ng-disabled="$ctrl.videosListIsEmpty"
-                            ng-click="$ctrl.checkVideos()"-->
-                            <!-- <md-icon class="material-icons">&#xE065;</md-icon>Проверить -->
-                            <span>checkVideos() Проверить</span>
-                        </button>
-                        <button v-on:click="saveList()">
-                            <!-- ng-disabled="$ctrl.videosListIsEmpty"
-                                id="saveListBtn"
-                            ng-click="$ctrl.saveList()"-->
-                            <!-- <md-icon class="material-icons">&#xE161;</md-icon>Сохранить -->
-                            <span>saveList() Сохранить</span>
-                        </button>
-                        <button v-on:click="loadList()">
-                            <!-- ng-if="$ctrl.hasVideosInStorage"
-                            ng-click="$ctrl.loadList()"-->
-                            <!-- <md-icon class="material-icons">&#xE929;</md-icon>Загрузить -->
-                            <span>loadList() Загрузить</span>
-                        </button>
-                        <button v-on:click="deleteVideos()">
-                            <!-- class="md-raised md-accent"
-                                ng-if="$ctrl.hasVideosInStorage"
-                            ng-click="$ctrl.showDialog('confirmDeleteDialog')"-->
-                            <!-- <md-icon class="material-icons">&#xE872;</md-icon>Удалить -->
-                            <span>showDialog('confirmDeleteDialog') Удалить</span>
-                        </button>
+                        <div class="q-pa-md q-gutter-sm">
+                            <q-btn v-on:click="checkVideos()" v-bind:disabled="isListEmpty" icon="fas fa-tasks" label="Проверить" color="primary" />
+                            <q-btn v-on:click="saveList()" v-bind:disabled="isListEmpty" icon="fas fa-save" label="Сохранить" color="secondary" />
+                            <q-btn v-on:click="loadList()" v-if="!isListEmpty" icon="fas fa-file-download" label="Загрузить" color="red" />
+                            <q-btn v-on:click="deleteVideos()" v-if="!isListEmpty" icon="fas fa-trash-alt" label="Удалить" color="purple" />
+                        </div>
                     </div>
                     <!-- </md-content> -->
                 </div>
@@ -85,6 +65,20 @@
 import VMainContentVideoListInputDelete from './VMainContentVideoListInputDelete';
 
 export default {
+    props: {
+        videos: Array,
+    },
+    watch: {
+        videos: {
+            immediate: true,
+            handler(newVideos) {
+                this.videosString = newVideos.join(', ');
+            },
+        },
+    },
+    data: function() {
+        return { videosString: '' };
+    },
     components: {
         VMainContentVideoListInputDelete,
     },
@@ -102,8 +96,12 @@ export default {
             console.log('show confirmation dialog');
         },
     },
+    computed: {
+        isListEmpty: function() {
+            return this.videosString == null || this.videosString == '';
+        },
+    },
 };
 </script>
 
-<style>
-</style>
+<style></style>

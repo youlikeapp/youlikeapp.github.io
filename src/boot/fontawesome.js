@@ -12,7 +12,7 @@ import { faChrome } from '@fortawesome/free-brands-svg-icons';
 import { faFirefox } from '@fortawesome/free-brands-svg-icons';
 import { faOpera } from '@fortawesome/free-brands-svg-icons';
 
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faSave, faTasks, faFileDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default ({ Vue }) => {
     library.add(
@@ -25,7 +25,11 @@ export default ({ Vue }) => {
         faChrome,
         faOpera,
         faFirefox,
-        faThumbsUp
+        faThumbsUp,
+        faSave,
+        faTasks,
+        faFileDownload,
+        faTrashAlt
     );
     Vue.component('fa', FontAwesomeIcon);
 };
