@@ -35,7 +35,6 @@ export default {
         VMainContentVideoErrors,
     },
     mounted() {
-        debugger;
         this.$store.subscribe(({ type, payload }) => {
             if (type === CHECK_VIDEOS) {
                 this.checkedVideos = payload;
