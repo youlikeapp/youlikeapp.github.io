@@ -8,18 +8,8 @@
                 <div class="text-subtitle2">{{ user.name }}</div>
             </div>
             <q-card-actions>
-                <q-btn
-                    flat
-                    v-if="!isSignedIn"
-                    v-on:click="signIn"
-                    v-bind:disabled="isLoading"
-                >Sign In</q-btn>
-                <q-btn
-                    flat
-                    v-if="isSignedIn"
-                    v-on:click="logOff"
-                    v-bind:disabled="isLoading"
-                >Log Off</q-btn>
+                <q-btn flat v-if="!isSignedIn" v-on:click="signIn" v-bind:disabled="isLoading">Sign In</q-btn>
+                <q-btn flat v-if="isSignedIn" v-on:click="logOff" v-bind:disabled="isLoading">Log Off</q-btn>
             </q-card-actions>
         </q-card>
     </div>
@@ -53,6 +43,7 @@ export default {
         user() {
             const { name, image } = this.$store.state.user;
             const i = appendPrefixIfImage(image);
+            console.log('name: ', name);
             return { name, image: i };
         },
     },

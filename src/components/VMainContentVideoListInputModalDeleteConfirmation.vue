@@ -15,6 +15,8 @@
 </template>
 
 <script>
+const events = { close: 'close' };
+
 export default {
     props: {
         modalVisible: Boolean,
@@ -26,7 +28,7 @@ export default {
     },
     methods: {
         close: function() {
-            this.$emit('close', { accepted: this.accepted });
+            this.$emit(this.events.close, { accepted: this.accepted });
         },
     },
     computed: {

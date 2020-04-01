@@ -3,11 +3,11 @@
         <button v-on:click="addVideo()">test add</button>
         <v-main-content-video-list-input
             v-bind:videos="videos"
-            @check-videos="checkVideos()"
+            @check-videos="checkVideos($event)"
             @save-list="saveList()"
             @load-list="loadList()"
         />
-        <v-main-content-recovery-summary />
+        <v-main-content-recovery-summary v-bind:checkedVideos="checkedVideos" />
         <v-main-content-video-errors />
     </div>
 </template>
@@ -17,18 +17,35 @@ import VMainContentVideoListInput from './VMainContentVideoListInput';
 import VMainContentRecoverySummary from './VMainContentRecoverySummary';
 import VMainContentVideoErrors from './VMainContentVideoErrors';
 
+import { CHECK_VIDEOS } from '../store/mutation-types';
+
 export default {
     data: function() {
-        return { videos: ['www.youtube.com/1234', 'www.youtube.com/235', 'www.youtube.com/acdef'] };
+        return {
+            videos: ['https://www.youtube.com/watch?v=T4Df5_cojAs', 'https://www.youtube.com/watch?v=b5xlL-C53f8'],
+            checkedVideos: {
+                withLikes: [],
+                withoutLikes: [],
+            },
+        };
     },
     components: {
         VMainContentVideoListInput,
         VMainContentRecoverySummary,
         VMainContentVideoErrors,
     },
+    mounted() {
+        debugger;
+        this.$store.subscribe(({ type, payload }) => {
+            if (type === CHECK_VIDEOS) {
+                this.checkedVideos = payload;
+            }
+        });
+    },
     methods: {
-        checkVideos: function() {
-            console.log('@check-videos');
+        checkVideos: function(videosToCheck) {
+            console.log('@check-videos', videosToCheck);
+            this.$store.dispatch({ type: CHECK_VIDEOS, videosToCheck });
         },
         saveList: function() {
             console.log('@save-list');
@@ -43,5 +60,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -1,3 +1,4 @@
 export const SIGN_IN = 'SIGN_IN';
 export const LOG_OFF = 'LOG_OFF';
 export const SET_UP_GOOGLE_AUTHENTICATION_API = 'SET_UP_GOOGLE_AUTHENTICATION_API';
+export const CHECK_VIDEOS = 'CHECK_VIDEOS';

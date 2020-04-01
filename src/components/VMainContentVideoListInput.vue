@@ -78,6 +78,8 @@
 <script>
 import VMainContentVideoListInputModalDeleteConfirmation from './VMainContentVideoListInputModalDeleteConfirmation';
 
+const events = { checkVideos: 'check-videos', saveList: 'save-list', loadList: 'load-list' };
+
 export default {
     props: {
         videos: Array,
@@ -98,20 +100,20 @@ export default {
     },
     methods: {
         checkVideos: function() {
-            this.$emit('check-videos');
+            const videos = this.videosString.split(',').map(video => video.trim());
+            this.$emit(events.checkVideos, videos);
         },
         saveList: function() {
-            this.$emit('save-list');
+            this.$emit(events.saveList);
         },
         loadList: function() {
-            this.$emit('load-list');
+            this.$emit(events.loadList);
         },
         showDeleteConfirmationModal: function() {
             this.isDeleteModalVisible = true;
         },
         deleteVideos: function(isOpened) {
             this.isDeleteModalVisible = false;
-            console.log('deletion confirmed', isOpened);
         },
     },
     computed: {

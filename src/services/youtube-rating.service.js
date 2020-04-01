@@ -1,3 +1,7 @@
+import { uniq } from 'lodash';
+import validator from 'validator';
+import queryString from 'query-string';
+
 const publicApi = {
     checkVideos,
     setRating,
@@ -6,29 +10,29 @@ const publicApi = {
 const maxSizeOfGapiBatchRequest = 580;
 const gapiService = { name: 'youtube', version: 'v3' };
 
-function checkVideos(videoIdList) {
-    let videoIds = getUniqueVideoIds(videoIdList);
-    let videoIdsChunksMatrix = split(videoIds).intoChunksOf(maxSizeOfGapiBatchRequest);
+function checkVideos(videos) {
+    const videoIds = uniq(extractVideoIds(videos));
+    const videoIdsChunksMatrix = split(videoIds).intoChunksOf(maxSizeOfGapiBatchRequest);
     return gapi.client
         .load(gapiService.name, gapiService.version)
         .then(() => {
             let promisesArray = [];
 
             videoIdsChunksMatrix.forEach(videoIdsChunk => {
+                console.log(videoIdsChunk);
                 let promise = gapi.client.youtube.videos.getRating({
                     id: videoIdsChunk.join(','),
                 });
 
-                promises.push(promise);
+                promisesArray.push(promise);
             });
 
             return Promise.all(promisesArray);
         })
         .then(
             responses => {
-                let result = new CheckingResult();
-                let idsWithLikes = [];
-                let idsWithoutLikes = [];
+                let withLikes = [];
+                let withoutLikes = [];
 
                 for (let i = 0; i < responses.length; i++) {
                     const response = responses[i];
@@ -38,23 +42,20 @@ function checkVideos(videoIdList) {
                         const videoRating = videoRatingArray[i];
 
                         if (videoRating.rating !== 'like') {
-                            idsWithoutLikes.push(videoRating.videoId);
+                            withoutLikes.push(videoRating.videoId);
                         } else {
-                            idsWithLikes.push(videoRating.videoId);
+                            withLikes.push(videoRating.videoId);
                         }
                     }
                 }
 
-                result.withLikes = withLikes;
-                result.withoutLikes = withoutLikes;
-
-                return result;
+                return { withLikes, withoutLikes };
             },
             data => {
-                console.error(data);
-                toastr.error(`Не удалось проверить список видео.`);
+                console.error('youtube-rating.service.js');
+                // toastr.error(`Не удалось проверить список видео.`);
 
-                return null;
+                return data;
             }
         );
 }
@@ -92,21 +93,8 @@ function setRating(videoIds, rating, onSuccess, onError) {
     });
 }
 
-function getUniqueVideoIds(videoIdList) {
-    const videos = videoIdList.split('\n');
-    return _.uniq(
-        videos.map(video => {
-            let result;
-
-            if (validator.isURL(video)) {
-                result = queryString.parse(queryString.extract(video)).v;
-            } else {
-                result = video;
-            }
-
-            return result;
-        })
-    );
+function extractVideoIds(videos) {
+    return videos.map(videoUrl => (validator.isURL(videoUrl) ? queryString.parse(queryString.extract(videoUrl)).v : videoUrl));
 }
 
 function split(arrayToSplit) {

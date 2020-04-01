@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div style="background-color: lightgrey">
         <!-- <md-content ng-if="$ctrl.lastCheckingResult"> -->
         <h3>Результат проверки</h3>
-        <p>Всего проверено: $ctrl.lastCheckingResult.withLikes.length + $ctrl.lastCheckingResult.withoutLikes.length</p>
-        <p>С лайками: $ctrl.lastCheckingResult.withLikes.length</p>
-        <p>Без лайков: $ctrl.lastCheckingResult.withoutLikes.length</p>
+        <p>Всего проверено: {{numberOfCheckedVideos}}</p>
+        <p>С лайками: {{numberOfVideosWithLikes}}</p>
+        <p>Без лайков: {{numberOfVideosWithoutLikes}}</p>
         <div>
             <!-- ng-if="$ctrl.lastCheckingResult.withoutLikes.length > 0" -->
             <button>
@@ -27,6 +27,25 @@
 import VMainContentRecoverySummaryWithoutLikes from './VMainContentRecoverySummaryWithoutLikes';
 
 export default {
+    props: {
+        checkedVideos: {
+            type: Object,
+            default: function() {
+                return { withLikes: [], withoutLikes: [] };
+            },
+        },
+    },
+    computed: {
+        numberOfVideosWithLikes() {
+            return this.checkedVideos.withLikes.length;
+        },
+        numberOfVideosWithoutLikes() {
+            return this.checkedVideos.withoutLikes.length;
+        },
+        numberOfCheckedVideos() {
+            return this.numberOfVideosWithLikes + this.numberOfVideosWithoutLikes;
+        },
+    },
     componentst: {
         VMainContentRecoverySummaryWithoutLikes,
     },

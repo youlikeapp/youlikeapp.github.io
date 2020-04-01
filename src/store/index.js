@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import * as type from './mutation-types';
 
 import googleApiService from '../services/google-api.service';
+import youtubeRatingService from '../services/youtube-rating.service';
 
 Vue.use(Vuex);
 
@@ -12,6 +13,10 @@ const initialState = {
         name: 'Anonymous User',
         image: 'far fa-user',
         isSignedIn: false,
+    },
+    checkedVideos: {
+        withLikes: [],
+        withoutLikes: [],
     },
 };
 
@@ -24,6 +29,9 @@ export default function(/* { ssrContext } */) {
             },
             [type.LOG_OFF](state, user) {
                 state.user = { ...user };
+            },
+            [type.CHECK_VIDEOS](state, checkedVideos) {
+                state.checkedVideos = { ...checkedVideos };
             },
         },
         actions: {
@@ -46,19 +54,22 @@ export default function(/* { ssrContext } */) {
             },
             [type.SET_UP_GOOGLE_AUTHENTICATION_API]({ commit }) {
                 googleApiService.setUpAuthInstance().then(() => {
-                    googleApiService.listenToSignedInChanges(
-                        ({ isSignedIn, user }) => {
-                            if (isSignedIn) {
-                                commit(type.SIGN_IN, {
-                                    name: user.name,
-                                    image: user.image,
-                                    isSignedIn,
-                                });
-                            } else {
-                                commit(type.LOG_OFF, { ...initialState.user });
-                            }
+                    googleApiService.listenToSignedInChanges(({ isSignedIn, user }) => {
+                        if (isSignedIn) {
+                            commit(type.SIGN_IN, {
+                                name: user.name,
+                                image: user.image,
+                                isSignedIn,
+                            });
+                        } else {
+                            commit(type.LOG_OFF, { ...initialState.user });
                         }
-                    );
+                    });
+                });
+            },
+            [type.CHECK_VIDEOS]({ commit }, { videosToCheck }) {
+                youtubeRatingService.checkVideos(videosToCheck).then(checkedVideos => {
+                    commit(type.CHECK_VIDEOS, checkedVideos);
                 });
             },
         },
