@@ -4,42 +4,14 @@
             <h1>Восстановление лайков</h1>
             <div>
                 <label>Список видео (идентификаторы или полные ссылки)</label>
-                <q-input
-                    v-model="videosString"
-                    filled
-                    autogrow
-                    placeholder="placeholder to be filled in"
-                />
+                <q-input v-model.trim="$v.videosString.$model" filled autogrow placeholder="placeholder to be filled in" />
+                <div class="error" v-if="!$v.videosString.required">Field is required</div>
             </div>
             <div class="q-pa-md q-gutter-sm">
-                <q-btn
-                    v-on:click="checkVideos()"
-                    v-bind:disabled="isListEmpty"
-                    icon="fas fa-tasks"
-                    label="Проверить"
-                    color="primary"
-                />
-                <q-btn
-                    v-on:click="saveList()"
-                    v-bind:disabled="isListEmpty"
-                    icon="fas fa-save"
-                    label="Сохранить"
-                    color="secondary"
-                />
-                <q-btn
-                    v-on:click="loadList()"
-                    v-if="!isListEmpty"
-                    icon="fas fa-file-download"
-                    label="Загрузить"
-                    color="red"
-                />
-                <q-btn
-                    v-on:click="showDeleteConfirmationModal()"
-                    v-if="!isListEmpty"
-                    icon="fas fa-trash-alt"
-                    label="Удалить"
-                    color="purple"
-                />
+                <q-btn v-on:click="checkVideos()" v-bind:disabled="isListEmpty" icon="fas fa-tasks" label="Проверить" color="primary" />
+                <q-btn v-on:click="saveList()" v-bind:disabled="isListEmpty" icon="fas fa-save" label="Сохранить" color="secondary" />
+                <q-btn v-on:click="loadList()" v-if="!isListEmpty" icon="fas fa-file-download" label="Загрузить" color="red" />
+                <q-btn v-on:click="showDeleteConfirmationModal()" v-if="!isListEmpty" icon="fas fa-trash-alt" label="Удалить" color="purple" />
             </div>
         </div>
         <div>
@@ -62,27 +34,27 @@
         </div>
         <!-- <a id="{{ $ctrl.bottomId }}"></a> -->
         a href with $ctrl.bottomId dynamic id
-        <input
-            id="forceUpdate"
-            type="hidden"
-            placeholder="on click $ctrl.forceUpdate()"
-        />
+        <input id="forceUpdate" type="hidden" placeholder="on click $ctrl.forceUpdate()" />
 
-        <v-main-content-video-list-input-modal-delete-confirmation
-            v-bind:modal-visible="isDeleteModalVisible"
-            @close="closeModal"
-        />
+        <v-main-content-video-list-input-modal-delete-confirmation v-bind:modal-visible="isDeleteModalVisible" @close="closeModal" />
     </div>
 </template>
 
 <script>
 import VMainContentVideoListInputModalDeleteConfirmation from './VMainContentVideoListInputModalDeleteConfirmation';
+import { required } from 'vuelidate/lib/validators';
 
 const customEvents = { checkVideos: 'check-videos', saveList: 'save-list', loadList: 'load-list', removeVideos: 'remove-videos' };
 
 export default {
     props: {
         videos: Array,
+    },
+    data: function() {
+        return { videosString: '', isDeleteModalVisible: false };
+    },
+    validations: {
+        videosString: { required },
     },
     watch: {
         videos: {
@@ -91,9 +63,6 @@ export default {
                 this.videosString = newVideos.join(', ');
             },
         },
-    },
-    data: function() {
-        return { videosString: '', isDeleteModalVisible: false };
     },
     components: {
         VMainContentVideoListInputModalDeleteConfirmation,

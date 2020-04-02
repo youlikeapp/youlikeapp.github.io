@@ -24,7 +24,8 @@
         "query-string": "^6.11.1",
         "validator": "^13.0.0",
         "vue-i18n": "^8.0.0",
-        "vue-social-sharing": "^2.4.7"
+        "vue-social-sharing": "^2.4.7",
+        "vuelidate": "^0.7.5"
     },
     "devDependencies": {
         "@quasar/app": "^1.0.0",

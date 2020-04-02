@@ -6,12 +6,7 @@ module.exports = function(ctx) {
         // app boot file (/src/boot)
         // --> boot files are part of "main.js"
         // https://quasar.dev/quasar-cli/cli-documentation/boot-files
-        boot: [
-            'i18n',
-            'vue-social-sharing',
-            'fontawesome',
-            'vue-plugin-load-script',
-        ],
+        boot: ['i18n', 'vue-social-sharing', 'fontawesome', 'vue-plugin-load-script', 'vuelidate'],
 
         // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
         // css: ['app.sass'],
@@ -74,9 +69,7 @@ module.exports = function(ctx) {
                     loader: 'eslint-loader',
                     exclude: /node_modules/,
                     options: {
-                        formatter: require('eslint').CLIEngine.getFormatter(
-                            'stylish'
-                        ),
+                        formatter: require('eslint').CLIEngine.getFormatter('stylish'),
                     },
                 });
             },

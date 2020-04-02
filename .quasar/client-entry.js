@@ -40,6 +40,8 @@ import qboot_Bootfontawesome from 'boot/fontawesome'
 
 import qboot_Bootvuepluginloadscript from 'boot/vue-plugin-load-script'
 
+import qboot_Bootvuelidate from 'boot/vuelidate'
+
 
 
 
@@ -70,7 +72,7 @@ async function start () {
   }
 
   const urlPath = window.location.href.replace(window.location.origin, '')
-  const bootFiles = [qboot_Booti18n,qboot_Bootvuesocialsharing,qboot_Bootfontawesome,qboot_Bootvuepluginloadscript]
+  const bootFiles = [qboot_Booti18n,qboot_Bootvuesocialsharing,qboot_Bootfontawesome,qboot_Bootvuepluginloadscript,qboot_Bootvuelidate]
 
   for (let i = 0; routeUnchanged === true && i < bootFiles.length; i++) {
     if (typeof bootFiles[i] !== 'function') {
