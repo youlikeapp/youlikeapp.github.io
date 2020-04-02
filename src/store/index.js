@@ -78,7 +78,6 @@ export default function(/* { ssrContext } */) {
             },
             [type.GET_SAVED_VIDEOS]({ commit }) {
                 setTimeout(() => {
-                    debugger;
                     const savedVideos = JSON.parse(localStorage.getItem('videosList')) || [];
                     commit(type.GET_SAVED_VIDEOS, savedVideos);
                 }, 1000);
