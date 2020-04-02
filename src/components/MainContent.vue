@@ -48,11 +48,9 @@ export default {
     },
     methods: {
         checkVideos: function(videosToCheck) {
-            console.log('@check-videos', videosToCheck);
             this.$store.dispatch({ type: CHECK_VIDEOS, videosToCheck });
         },
         saveList: function(videosToSave) {
-            debugger;
             this.$store.dispatch({ type: SAVE_VIDEOS, videosToSave });
         },
         loadList: function() {
