@@ -1,6 +1,6 @@
 <template>
-    <div class="dialog-container">
-        <div class="md-dialog-container" id="videosWithoutLikesDialog">
+    <div>
+        <div>
             <div>
                 <!-- <md-dialog
                     md-theme="default"

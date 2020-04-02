@@ -1,14 +1,11 @@
 <template>
     <div style="background-color: lightgrey">
-        <!-- <md-content ng-if="$ctrl.lastCheckingResult"> -->
         <h3>Результат проверки</h3>
         <p>Всего проверено: {{numberOfCheckedVideos}}</p>
         <p>С лайками: {{numberOfVideosWithLikes}}</p>
         <p>Без лайков: {{numberOfVideosWithoutLikes}}</p>
         <div>
-            <!-- ng-if="$ctrl.lastCheckingResult.withoutLikes.length > 0" -->
-            <button>
-                <!-- ng-click="$ctrl.showDialog('videosWithoutLikesDialog')" -->
+            <button v-on:click="showVideosWithoutLikes()">
                 <!-- <md-icon class="material-icons">&#xE417;</md-icon> -->
                 $ctrl.showDialog('videosWithoutLikesDialog')
                 <span>Показать видео без лайков</span>
@@ -19,7 +16,7 @@
                 <span>Поставить лайки</span>
             </button>
         </div>
-        <v-main-content-recovery-summary-without-likes />
+        <!-- <v-main-content-recovery-summary-without-likes /> -->
     </div>
 </template>
 
@@ -44,6 +41,11 @@ export default {
         },
         numberOfCheckedVideos() {
             return this.numberOfVideosWithLikes + this.numberOfVideosWithoutLikes;
+        },
+    },
+    methods: {
+        showVideosWithoutLikes: function() {
+            console.log('showVideosWithoutLikes');
         },
     },
     componentst: {

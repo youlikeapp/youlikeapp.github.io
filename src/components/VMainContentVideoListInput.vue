@@ -70,7 +70,7 @@
 
         <v-main-content-video-list-input-modal-delete-confirmation
             v-bind:modal-visible="isDeleteModalVisible"
-            @close="deleteVideos"
+            @close="closeModal"
         />
     </div>
 </template>
@@ -78,7 +78,7 @@
 <script>
 import VMainContentVideoListInputModalDeleteConfirmation from './VMainContentVideoListInputModalDeleteConfirmation';
 
-const events = { checkVideos: 'check-videos', saveList: 'save-list', loadList: 'load-list' };
+const customEvents = { checkVideos: 'check-videos', saveList: 'save-list', loadList: 'load-list', removeVideos: 'remove-videos' };
 
 export default {
     props: {
@@ -101,19 +101,23 @@ export default {
     methods: {
         checkVideos: function() {
             const videos = this.videosString.split(',').map(video => video.trim());
-            this.$emit(events.checkVideos, videos);
+            this.$emit(customEvents.checkVideos, videos);
         },
         saveList: function() {
-            this.$emit(events.saveList);
+            const videos = this.videosString.split(',').map(video => video.trim());
+            this.$emit(customEvents.saveList, videos);
         },
         loadList: function() {
-            this.$emit(events.loadList);
+            this.$emit(customEvents.loadList);
         },
         showDeleteConfirmationModal: function() {
             this.isDeleteModalVisible = true;
         },
-        deleteVideos: function(isOpened) {
+        closeModal: function({ deleteConfirmed }) {
             this.isDeleteModalVisible = false;
+            if (deleteConfirmed) {
+                this.$emit(customEvents.removeVideos);
+            }
         },
     },
     computed: {

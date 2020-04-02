@@ -7,15 +7,27 @@
             </q-card-section>
 
             <q-card-actions align="right">
-                <q-btn flat label="Нет" color="primary" @click="accepted = false" v-close-popup />
-                <q-btn flat label="Да" color="primary" @click="accepted = true" v-close-popup />
+                <q-btn
+                    flat
+                    label="Нет"
+                    color="primary"
+                    @click="deleteConfirmed = false"
+                    v-close-popup
+                />
+                <q-btn
+                    flat
+                    label="Да"
+                    color="primary"
+                    @click="deleteConfirmed = true"
+                    v-close-popup
+                />
             </q-card-actions>
         </q-card>
     </q-dialog>
 </template>
 
 <script>
-const events = { close: 'close' };
+const customEvents = { close: 'close' };
 
 export default {
     props: {
@@ -23,12 +35,12 @@ export default {
     },
     data: function() {
         return {
-            accepted: Boolean,
+            deleteConfirmed: Boolean,
         };
     },
     methods: {
         close: function() {
-            this.$emit(this.events.close, { accepted: this.accepted });
+            this.$emit(customEvents.close, { deleteConfirmed: this.deleteConfirmed });
         },
     },
     computed: {

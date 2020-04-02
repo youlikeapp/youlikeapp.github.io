@@ -18,6 +18,7 @@ const initialState = {
         withLikes: [],
         withoutLikes: [],
     },
+    savedVideos: [],
 };
 
 export default function(/* { ssrContext } */) {
@@ -32,6 +33,9 @@ export default function(/* { ssrContext } */) {
             },
             [type.CHECK_VIDEOS](state, checkedVideos) {
                 state.checkedVideos = { ...checkedVideos };
+            },
+            [type.GET_SAVED_VIDEOS](state, savedVideos) {
+                state.savedVideos = savedVideos;
             },
         },
         actions: {
@@ -71,6 +75,16 @@ export default function(/* { ssrContext } */) {
                 youtubeRatingService.checkVideos(videosToCheck).then(checkedVideos => {
                     commit(type.CHECK_VIDEOS, checkedVideos);
                 });
+            },
+            [type.GET_SAVED_VIDEOS]({ commit }) {
+                setTimeout(() => {
+                    debugger;
+                    const savedVideos = JSON.parse(localStorage.getItem('videosList')) || [];
+                    commit(type.GET_SAVED_VIDEOS, savedVideos);
+                }, 1000);
+            },
+            [type.SAVE_VIDEOS]({}, { videosToSave }) {
+                localStorage.setItem('videosList', JSON.stringify(videosToSave));
             },
         },
         strict: process.env.DEV,

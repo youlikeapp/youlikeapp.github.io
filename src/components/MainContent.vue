@@ -4,8 +4,9 @@
         <v-main-content-video-list-input
             v-bind:videos="videos"
             @check-videos="checkVideos($event)"
-            @save-list="saveList()"
+            @save-list="saveList"
             @load-list="loadList()"
+            @remove-videos="removeVideos"
         />
         <v-main-content-recovery-summary v-bind:checkedVideos="checkedVideos" />
         <v-main-content-video-errors />
@@ -17,12 +18,12 @@ import VMainContentVideoListInput from './VMainContentVideoListInput';
 import VMainContentRecoverySummary from './VMainContentRecoverySummary';
 import VMainContentVideoErrors from './VMainContentVideoErrors';
 
-import { CHECK_VIDEOS } from '../store/mutation-types';
+import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS } from '../store/mutation-types';
 
 export default {
     data: function() {
         return {
-            videos: ['https://www.youtube.com/watch?v=T4Df5_cojAs', 'https://www.youtube.com/watch?v=b5xlL-C53f8'],
+            videos: [],
             checkedVideos: {
                 withLikes: [],
                 withoutLikes: [],
@@ -38,22 +39,30 @@ export default {
         this.$store.subscribe(({ type, payload }) => {
             if (type === CHECK_VIDEOS) {
                 this.checkedVideos = payload;
+            } else if (type === GET_SAVED_VIDEOS) {
+                this.videos = payload;
             }
         });
+
+        this.$store.dispatch(GET_SAVED_VIDEOS);
     },
     methods: {
         checkVideos: function(videosToCheck) {
             console.log('@check-videos', videosToCheck);
             this.$store.dispatch({ type: CHECK_VIDEOS, videosToCheck });
         },
-        saveList: function() {
-            console.log('@save-list');
+        saveList: function(videosToSave) {
+            debugger;
+            this.$store.dispatch({ type: SAVE_VIDEOS, videosToSave });
         },
         loadList: function() {
-            console.log('@load-list');
+            this.$store.dispatch(GET_SAVED_VIDEOS);
         },
         addVideo: function() {
             this.videos = [...this.videos, 'www.youtube.pl/xyz'];
+        },
+        removeVideos: function() {
+            console.log('removeVideos');
         },
     },
 };
