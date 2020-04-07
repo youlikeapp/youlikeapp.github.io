@@ -1,8 +1,7 @@
 const routes = [
     {
         path: '/',
-        component: () => import('layouts/MainLayout.vue'),
-        children: [{ path: '', component: () => import('pages/Index.vue') }],
+        redirect: '/recovery',
     },
     {
         path: '/about',
@@ -12,9 +11,7 @@ const routes = [
     {
         path: '/extension',
         component: () => import('layouts/MainLayout.vue'),
-        children: [
-            { path: '', component: () => import('pages/Extension.vue') },
-        ],
+        children: [{ path: '', component: () => import('pages/Extension.vue') }],
     },
     {
         path: '/recovery',
