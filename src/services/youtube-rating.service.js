@@ -1,6 +1,6 @@
 import { uniq } from 'lodash';
 import validator from 'validator';
-import queryString from 'query-string';
+import youtubeUrlParserService from './youtube-url-parser.service';
 
 const publicApi = {
     checkVideos,
@@ -18,7 +18,7 @@ function checkVideos(videos) {
         .then(() => {
             let promisesArray = [];
 
-            videoIdsChunksMatrix.forEach(videoIdsChunk => {
+            videoIdsChunksMatrix.forEach((videoIdsChunk) => {
                 console.log(videoIdsChunk);
                 let promise = gapi.client.youtube.videos.getRating({
                     id: videoIdsChunk.join(','),
@@ -30,7 +30,7 @@ function checkVideos(videos) {
             return Promise.all(promisesArray);
         })
         .then(
-            responses => {
+            (responses) => {
                 let withLikes = [];
                 let withoutLikes = [];
 
@@ -51,7 +51,7 @@ function checkVideos(videos) {
 
                 return { withLikes, withoutLikes };
             },
-            data => {
+            (data) => {
                 console.error('youtube-rating.service.js');
                 // toastr.error(`Не удалось проверить список видео.`);
 
@@ -76,8 +76,8 @@ function setRating(videoIds, rating, onSuccess, onError) {
                             onSuccess(videoId);
                         }
                     },
-                    data => {
-                        toastr.error(`Не удалось поставить лайк на видео с идентификатором ${videoId}. ${data.result.error.message}`);
+                    (data) => {
+                        // toastr.error(`Не удалось поставить лайк на видео с идентификатором ${videoId}. ${data.result.error.message}`);
                         console.error(data);
 
                         if (onError) {
@@ -94,11 +94,11 @@ function setRating(videoIds, rating, onSuccess, onError) {
 }
 
 function extractVideoIds(videos) {
-    return videos.map(videoUrl => (validator.isURL(videoUrl) ? queryString.parse(queryString.extract(videoUrl)).v : videoUrl));
+    return videos.map((videoUrl) => (validator.isURL(videoUrl) ? youtubeUrlParserService.getVideoId(videoUrl) : videoUrl));
 }
 
 function split(arrayToSplit) {
-    return { intoChunksOf: chunkSize => _.chunk(arrayToSplit, chunkSize) };
+    return { intoChunksOf: (chunkSize) => _.chunk(arrayToSplit, chunkSize) };
 }
 
 const youtubeRatingService = publicApi;
