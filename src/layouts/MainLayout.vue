@@ -3,7 +3,7 @@
         <div>
             <div class="q-gutter-y-md">
                 <q-toolbar class="bg-purple text-white shadow-2 rounded-borders">
-                    <q-tabs v-model="tab" shrink stretch>
+                    <q-tabs shrink stretch>
                         <q-route-tab
                             to="/recovery"
                             name="recovery"
@@ -23,38 +23,11 @@
                             label="About"
                         />
                     </q-tabs>
-
                     <q-space />
-
-                    <!--
-        notice shrink property since we are placing it
-        as child of QToolbar
-                    -->
-                    <q-btn flat label="Homepage"></q-btn>
+                    <google-sign-in />
                 </q-toolbar>
-                <!-- <q-tabs
-                    align="left"
-                    v-model="tab"
-                    narrow-indicator
-                    class="bg-purple text-white shadow-2"
-                >
-                    <q-route-tab
-                        to="/recovery"
-                        name="recovery"
-                        icon="far fa-thumbs-up"
-                        label="Recovery"
-                    />
-                    <q-route-tab
-                        to="/extension"
-                        name="extension"
-                        icon="fas fa-puzzle-piece"
-                        label="Extension"
-                    />
-                    <q-route-tab to="/about" name="about" icon="fas fa-info-circle" label="About" />
-                </q-tabs>-->
             </div>
         </div>
-        <google-sign-in />
         <router-view />
     </div>
 </template>
