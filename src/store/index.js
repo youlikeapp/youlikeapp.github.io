@@ -9,6 +9,8 @@ import storageService from '../services/storage.service';
 
 Vue.use(Vuex);
 
+const videosStorageKey = 'videosList';
+
 const initialState = {
     user: {
         name: 'Anonymous User',
@@ -33,6 +35,12 @@ const mutations = {
         state.checkedVideos = { ...checkedVideos };
     },
     [type.GET_SAVED_VIDEOS](state, savedVideos) {
+        state.savedVideos = savedVideos;
+    },
+    [type.REMOVE_VIDEOS](state, removedVideos) {
+        state.savedVideos = removedVideos;
+    },
+    [type.SAVE_VIDEOS](state, savedVideos) {
         state.savedVideos = savedVideos;
     },
 };
@@ -71,24 +79,31 @@ const actions = {
         });
     },
     [type.CHECK_VIDEOS]({ commit }, { videosToCheck }) {
-        youtubeRatingService.checkVideos(videosToCheck).then(checkedVideos => {
+        youtubeRatingService.checkVideos(videosToCheck).then((checkedVideos) => {
             commit(type.CHECK_VIDEOS, checkedVideos);
         });
     },
     [type.GET_SAVED_VIDEOS]({ commit }) {
         setTimeout(() => {
-            storageService.get('videosList').then(res => {
+            storageService.get(videosStorageKey).then((res) => {
                 const savedVideos = res || [];
                 commit(type.GET_SAVED_VIDEOS, savedVideos);
             });
         }, 1000);
     },
-    [type.SAVE_VIDEOS]({}, { videosToSave }) {
-        storageService.save('videosList', videosToSave);
+    [type.SAVE_VIDEOS]({ commit }, { videosToSave }) {
+        storageService.save(videosStorageKey, videosToSave).then((result) => {
+            commit(type.SAVE_VIDEOS, result);
+        });
+    },
+    [type.REMOVE_VIDEOS]({ commit }) {
+        storageService.remove(videosStorageKey).then((result) => {
+            commit(type.REMOVE_VIDEOS, result || []);
+        });
     },
 };
 
-export default function(/* { ssrContext } */) {
+export default function (/* { ssrContext } */) {
     return new Vuex.Store({
         state: { ...initialState },
         mutations,

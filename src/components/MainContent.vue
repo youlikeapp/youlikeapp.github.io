@@ -1,6 +1,5 @@
 <template>
     <div>
-        <button v-on:click="addVideo()">test add</button>
         <v-main-content-video-list-input
             v-bind:videos="videos"
             @check-videos="checkVideos($event)"
@@ -18,7 +17,7 @@ import VMainContentVideoListInput from './VMainContentVideoListInput';
 import VMainContentRecoverySummary from './VMainContentRecoverySummary';
 import VMainContentVideoErrors from './VMainContentVideoErrors';
 
-import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS } from '../store/mutation-types';
+import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS } from '../store/mutation-types';
 
 export default {
     data: function() {
@@ -37,10 +36,15 @@ export default {
     },
     mounted() {
         this.$store.subscribe(({ type, payload }) => {
-            if (type === CHECK_VIDEOS) {
-                this.checkedVideos = payload;
-            } else if (type === GET_SAVED_VIDEOS) {
-                this.videos = payload;
+            switch (type) {
+                case CHECK_VIDEOS:
+                    this.checkedVideos = payload;
+                    break;
+                case GET_SAVED_VIDEOS:
+                case REMOVE_VIDEOS:
+                case SAVE_VIDEOS:
+                    this.videos = payload;
+                    break;
             }
         });
 
@@ -56,11 +60,8 @@ export default {
         loadList: function() {
             this.$store.dispatch(GET_SAVED_VIDEOS);
         },
-        addVideo: function() {
-            this.videos = [...this.videos, 'www.youtube.pl/xyz'];
-        },
         removeVideos: function() {
-            console.log('removeVideos');
+            this.$store.dispatch({ type: REMOVE_VIDEOS });
         },
     },
 };
