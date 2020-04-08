@@ -42,28 +42,22 @@
                 >
                     <div>
                         <network network="vk">
-                            <fa :icon="['fab', 'vk']" />
-                            VKontakte
+                            <fa :icon="['fab', 'vk']" />VKontakte
                         </network>
                         <network network="twitter">
-                            <fa :icon="['fab', 'twitter']" />
-                            Twitter
+                            <fa :icon="['fab', 'twitter']" />Twitter
                         </network>
                         <network network="facebook">
-                            <fa :icon="['fab', 'facebook']" />
-                            Facebook
+                            <fa :icon="['fab', 'facebook']" />Facebook
                         </network>
                         <network network="odnoklassniki">
-                            <fa :icon="['fab', 'odnoklassniki']" />
-                            Odnoklassniki
+                            <fa :icon="['fab', 'odnoklassniki']" />Odnoklassniki
                         </network>
                         <network network="googleplus">
-                            <fa :icon="['fab', 'google-plus']" />
-                            Google +
+                            <fa :icon="['fab', 'google-plus']" />Google +
                         </network>
                         <network network="telegram">
-                            <fa :icon="['fab', 'telegram']" />
-                            Telegram
+                            <fa :icon="['fab', 'telegram']" />Telegram
                         </network>
                     </div>
                 </social-sharing>
@@ -71,15 +65,16 @@
             <h4>Способ второй. Medium.</h4>
             <p>
                 Вы можете сообщать о проблемах и пожеланиях на этот ящик:
-                <a href="mailto:youlikeapp@gmail.com">youlikeapp@gmail.com</a>
+                <a
+                    href="mailto:youlikeapp@gmail.com"
+                >youlikeapp@gmail.com</a>
             </p>
             <h4>Способ третий. Hard.</h4>
             <p>
                 <a
                     href="https://github.com/youlikeapp/youlikeapp.github.io"
                     target="_blank"
-                    >Исходники проекта</a
-                >
+                >Исходники проекта</a>
                 находятся на GitHub, поэтому любой желающий может попробовать
                 модифицировать его и сделать пулл-реквест. И да, там же можно
                 писать о проблемах/пожеланиях, если не пугает буржуйский язык.
@@ -90,8 +85,7 @@
                 <a
                     href="https://github.com/Plastiquewind/youlike-chrome-extension"
                     target="_blank"
-                    >https://github.com/Plastiquewind/youlike-chrome-extension</a
-                >.
+                >https://github.com/Plastiquewind/youlike-chrome-extension</a>.
             </p>
         </div>
     </div>
@@ -103,4 +97,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

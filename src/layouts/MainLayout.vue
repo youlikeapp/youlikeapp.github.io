@@ -4,6 +4,7 @@
             <div class="q-gutter-y-md">
                 <q-toolbar class="bg-purple text-white shadow-2 rounded-borders">
                     <q-tabs shrink stretch>
+                        <q-route-tab to="/" name="home" icon="fas fa-home" label="Home" />
                         <q-route-tab
                             to="/recovery"
                             name="recovery"
