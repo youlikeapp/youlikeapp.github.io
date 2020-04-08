@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="q-pa-xl">
         <h1>О проекте</h1>
         <div>
             <div>

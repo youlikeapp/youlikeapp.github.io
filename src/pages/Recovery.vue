@@ -1,6 +1,12 @@
 <template>
-    <div>
-        <v-main-content-video-list-input v-bind:videos="videos" @check-videos="checkVideos($event)" @save-list="saveList" @load-list="loadList()" @remove-videos="removeVideos" />
+    <div class="q-pa-xl">
+        <v-main-content-video-list-input
+            v-bind:videos="videos"
+            @check-videos="checkVideos($event)"
+            @save-list="saveList"
+            @load-list="loadList()"
+            @remove-videos="removeVideos"
+        />
         <v-main-content-recovery-summary v-bind:checkedVideos="checkedVideos" />
         <v-main-content-video-errors />
     </div>
@@ -14,7 +20,7 @@ import VMainContentVideoErrors from '../components/VMainContentVideoErrors';
 import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS } from '../store/mutation-types';
 
 export default {
-    data: function () {
+    data: function() {
         return {
             videos: [],
             checkedVideos: {
@@ -45,16 +51,16 @@ export default {
         this.$store.dispatch(GET_SAVED_VIDEOS);
     },
     methods: {
-        checkVideos: function (videosToCheck) {
+        checkVideos: function(videosToCheck) {
             this.$store.dispatch({ type: CHECK_VIDEOS, videosToCheck });
         },
-        saveList: function (videosToSave) {
+        saveList: function(videosToSave) {
             this.$store.dispatch({ type: SAVE_VIDEOS, videosToSave });
         },
-        loadList: function () {
+        loadList: function() {
             this.$store.dispatch(GET_SAVED_VIDEOS);
         },
-        removeVideos: function () {
+        removeVideos: function() {
             this.$store.dispatch({ type: REMOVE_VIDEOS });
         },
     },
