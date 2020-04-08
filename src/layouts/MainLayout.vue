@@ -24,6 +24,16 @@
                         />
                     </q-tabs>
                     <q-space />
+                    <div class="q-mr-lg">
+                        <q-btn
+                            type="a"
+                            href="https://github.com/ragtam/youlikeapp.github.io"
+                            target="_blank"
+                            round
+                            icon="fab fa-github"
+                        />
+                    </div>
+
                     <google-sign-in />
                 </q-toolbar>
             </div>

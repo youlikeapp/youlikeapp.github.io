@@ -60,8 +60,10 @@ const actions = {
             }
         );
     },
-    [type.LOG_OFF]() {
-        googleApiService.logOff();
+    [type.LOG_OFF]({ commit }) {
+        googleApiService.logOff().then(() => {
+            commit(type.LOG_OFF, { ...initialState.user });
+        });
     },
     [type.SET_UP_GOOGLE_AUTHENTICATION_API]({ commit }) {
         googleApiService.setUpAuthInstance().then(() => {
@@ -79,31 +81,31 @@ const actions = {
         });
     },
     [type.CHECK_VIDEOS]({ commit }, { videosToCheck }) {
-        youtubeRatingService.checkVideos(videosToCheck).then((checkedVideos) => {
+        youtubeRatingService.checkVideos(videosToCheck).then(checkedVideos => {
             commit(type.CHECK_VIDEOS, checkedVideos);
         });
     },
     [type.GET_SAVED_VIDEOS]({ commit }) {
         setTimeout(() => {
-            storageService.get(videosStorageKey).then((res) => {
+            storageService.get(videosStorageKey).then(res => {
                 const savedVideos = res || [];
                 commit(type.GET_SAVED_VIDEOS, savedVideos);
             });
         }, 1000);
     },
     [type.SAVE_VIDEOS]({ commit }, { videosToSave }) {
-        storageService.save(videosStorageKey, videosToSave).then((result) => {
+        storageService.save(videosStorageKey, videosToSave).then(result => {
             commit(type.SAVE_VIDEOS, result);
         });
     },
     [type.REMOVE_VIDEOS]({ commit }) {
-        storageService.remove(videosStorageKey).then((result) => {
+        storageService.remove(videosStorageKey).then(result => {
             commit(type.REMOVE_VIDEOS, result || []);
         });
     },
 };
 
-export default function (/* { ssrContext } */) {
+export default function(/* { ssrContext } */) {
     return new Vuex.Store({
         state: { ...initialState },
         mutations,

@@ -21,6 +21,11 @@
                     <div class="text-subtitle2">{{ user.name }}</div>
                 </div>-->
             </q-avatar>
+            <q-tooltip
+                content-class="bg-purple"
+                content-style="font-size: 16px"
+                :offset="[10, 10]"
+            >{{ user.name }}</q-tooltip>
         </q-card-section>
     </q-card>
 </template>

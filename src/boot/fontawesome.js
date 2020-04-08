@@ -11,6 +11,7 @@ import { faTelegram } from '@fortawesome/free-brands-svg-icons';
 import { faChrome } from '@fortawesome/free-brands-svg-icons';
 import { faFirefox } from '@fortawesome/free-brands-svg-icons';
 import { faOpera } from '@fortawesome/free-brands-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import { faThumbsUp, faSave, faTasks, faFileDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -29,7 +30,8 @@ export default ({ Vue }) => {
         faSave,
         faTasks,
         faFileDownload,
-        faTrashAlt
+        faTrashAlt,
+        faGithub
     );
     Vue.component('fa', FontAwesomeIcon);
 };

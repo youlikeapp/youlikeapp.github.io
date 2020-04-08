@@ -38,7 +38,7 @@ function signIn() {
 }
 
 function logOff() {
-    authInstance.signOut();
+    return authInstance.signOut();
 }
 
 function listenToSignedInChanges(callback) {
