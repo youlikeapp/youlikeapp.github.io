@@ -1,5 +1,7 @@
 # Youlike web app
 
+[![Build Status](https://travis-ci.org/ragtam/youlikeapp.github.io.svg?branch=master)](https://travis-ci.org/ragtam/youlikeapp.github.io)
+
 url to gh pages:
 <https://ragtam.github.io/youlikeapp.github.io>
 
