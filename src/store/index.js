@@ -21,6 +21,10 @@ const initialState = {
         withLikes: [],
         withoutLikes: [],
     },
+    recoveredVideos: {
+        successful: [],
+        failed: [],
+    },
     savedVideos: [],
 };
 

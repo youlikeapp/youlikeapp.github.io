@@ -7,15 +7,17 @@
             @load-list="loadList()"
             @remove-videos="removeVideos"
         />
-        <v-main-content-recovery-summary v-bind:checkedVideos="checkedVideos" />
-        <v-main-content-video-errors />
+        <v-main-content-checking-summary v-bind:checkedVideos="checkedVideos" />
+        <v-recovery-page-recovery-summary v-bind:recoveredVideos="recoveredVideos" />
+        <!-- <v-main-content-video-errors /> -->
     </div>
 </template>
 
 <script>
 import VMainContentVideoListInput from '../components/VMainContentVideoListInput';
-import VMainContentRecoverySummary from '../components/VMainContentRecoverySummary';
-import VMainContentVideoErrors from '../components/VMainContentVideoErrors';
+import VMainContentCheckingSummary from '../components/VMainContentCheckingSummary';
+// import VMainContentVideoErrors from '../components/VMainContentVideoErrors';
+import VRecoveryPageRecoverySummary from '../components/VRecoveryPageRecoverySummary';
 
 import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS } from '../store/mutation-types';
 
@@ -27,12 +29,17 @@ export default {
                 withLikes: [],
                 withoutLikes: [],
             },
+            recoveredVideos: {
+                successfull: ['youtube.com.pl/1234', 'youtube.com.pl/acded', 'youtube.com.pl/vbsj'],
+                failed: ['youtube.com.pl/1234', 'youtube.com.pl/xyzas'],
+            },
         };
     },
     components: {
         VMainContentVideoListInput,
-        VMainContentRecoverySummary,
-        VMainContentVideoErrors,
+        VMainContentCheckingSummary,
+        // VMainContentVideoErrors,
+        VRecoveryPageRecoverySummary,
     },
     mounted() {
         this.$store.subscribe(({ type, payload }) => {

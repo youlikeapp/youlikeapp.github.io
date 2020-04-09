@@ -47,31 +47,6 @@
                 />
             </div>
         </div>
-        <div>
-            <!-- <md-content ng-if="$ctrl.lastSuccessedVideos || $ctrl.lastFailedVideos"> -->
-            <h3>Результат выставления лайков</h3>
-            <p>Проставлено: $ctrl.lastSuccessedVideos.length</p>
-            <p>Не проставлено: $ctrl.lastFailedVideos.length</p>
-            <p>
-                <strong>Лайки могут появиться с задержкой.</strong>
-            </p>
-            <div>
-                ng-if="$ctrl.lastFailedVideos.length > 0"
-                <button>
-                    ng-click="$ctrl.showDialog('failedVideosDialog')"
-                    <!-- <md-icon class="material-icons">&#xE417;</md-icon>Показать ошибки -->
-                    <span>Показать ошибки</span>
-                </button>
-            </div>
-            <!-- </md-content> -->
-        </div>
-        <!-- <a id="{{ $ctrl.bottomId }}"></a> -->
-        a href with $ctrl.bottomId dynamic id
-        <input
-            id="forceUpdate"
-            type="hidden"
-            placeholder="on click $ctrl.forceUpdate()"
-        />
 
         <v-main-content-video-list-input-modal-delete-confirmation
             v-bind:modal-visible="isDeleteModalVisible"
