@@ -3,7 +3,12 @@
         <h3>Результат выставления лайков</h3>
         <strong>Лайки могут появиться с задержкой.</strong>
         <div class="q-pa-md">
-            <p>Проставлено: {{ numberOfSuccessfullVideos }}</p>
+            <div class="q-mb-md">
+                <q-chip>
+                    <q-avatar color="teal" text-color="white">{{numberOfSuccessfullVideos}}</q-avatar>Проставлено
+                </q-chip>
+            </div>
+
             <q-table
                 title="List of recovered videos"
                 dense
@@ -13,7 +18,11 @@
             />
         </div>
         <div class="q-pa-md">
-            <p>Не проставлено: {{ numberOfFailedVideos }}</p>
+            <div class="q-mb-md">
+                <q-chip>
+                    <q-avatar color="red" text-color="white">{{numberOfFailedVideos}}</q-avatar>Не проставлено
+                </q-chip>
+            </div>
             <q-table
                 title="List of unrecovered videos"
                 dense
