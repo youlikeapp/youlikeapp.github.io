@@ -1,22 +1,14 @@
 <template>
     <div class="q-pa-xl">
-        <v-main-content-video-list-input
-            v-bind:videos="videos"
-            @check-videos="checkVideos($event)"
-            @save-list="saveList"
-            @load-list="loadList()"
-            @remove-videos="removeVideos"
-        />
-        <v-main-content-checking-summary v-bind:checkedVideos="checkedVideos" />
-        <v-recovery-page-recovery-summary v-bind:recoveredVideos="recoveredVideos" />
-        <!-- <v-main-content-video-errors /> -->
+        <v-recovery-video-list-input v-bind:videos="videos" @check-videos="checkVideos($event)" @save-list="saveList" @load-list="loadList()" @remove-videos="removeVideos" />
+        <v-recovery-checking-summary v-bind:disabled="!areVideosChecked" v-bind:checkedVideos="checkedVideos" />
+        <v-recovery-page-recovery-summary v-bind:disabled="!areVideosRecovered" v-bind:recoveredVideos="recoveredVideos" />
     </div>
 </template>
 
 <script>
-import VMainContentVideoListInput from '../components/VMainContentVideoListInput';
-import VMainContentCheckingSummary from '../components/VMainContentCheckingSummary';
-// import VMainContentVideoErrors from '../components/VMainContentVideoErrors';
+import VRecoveryVideoListInput from '../components/VRecoveryVideoListInput';
+import VRecoveryCheckingSummary from '../components/VRecoveryCheckingSummary';
 import VRecoveryPageRecoverySummary from '../components/VRecoveryPageRecoverySummary';
 
 import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS } from '../store/mutation-types';
@@ -36,9 +28,8 @@ export default {
         };
     },
     components: {
-        VMainContentVideoListInput,
-        VMainContentCheckingSummary,
-        // VMainContentVideoErrors,
+        VRecoveryVideoListInput,
+        VRecoveryCheckingSummary,
         VRecoveryPageRecoverySummary,
     },
     mounted() {
@@ -69,6 +60,14 @@ export default {
         },
         removeVideos: function() {
             this.$store.dispatch({ type: REMOVE_VIDEOS });
+        },
+    },
+    computed: {
+        areVideosChecked: function() {
+            return !!this.checkedVideos.withLikes.length || !!this.checkedVideos.withoutLikes.length;
+        },
+        areVideosRecovered: function() {
+            return !!this.recoveredVideos.successfull.length || !!this.recoveredVideos.failed.length;
         },
     },
 };

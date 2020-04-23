@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-bind:class="{ disabled: disabled }">
         <h3>Результат выставления лайков</h3>
         <strong>Лайки могут появиться с задержкой.</strong>
         <div class="q-pa-md">
@@ -57,6 +57,12 @@ export default {
             type: Object,
             default: function() {
                 return { successfull: [], failed: [] };
+            },
+        },
+        disabled: {
+            type: Boolean,
+            default: function() {
+                return false;
             },
         },
     },

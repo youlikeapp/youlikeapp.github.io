@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-bind:class="{ disabled: disabled }">
         <h3>Результат проверки</h3>
         <div class="q-mb-md">
             <q-chip>
@@ -12,6 +12,7 @@
                 <q-avatar color="teal" text-color="white">{{numberOfVideosWithLikes}}</q-avatar>С лайками
             </q-chip>
             <q-btn
+                v-bind:disabled="disabled"
                 v-on:click="recoverLikes()"
                 icon="fas fa-recycle"
                 label="Поставить лайки"
@@ -53,6 +54,12 @@ export default {
             type: Object,
             default: function() {
                 return { withLikes: [], withoutLikes: [] };
+            },
+        },
+        disabled: {
+            type: Boolean,
+            default: function() {
+                return false;
             },
         },
     },

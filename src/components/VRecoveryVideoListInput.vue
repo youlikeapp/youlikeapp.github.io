@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <v-main-content-video-list-input-modal-delete-confirmation
+        <v-recovery-video-list-input-modal-delete-confirmation
             v-bind:modal-visible="isDeleteModalVisible"
             @close="closeModal"
         />
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import VMainContentVideoListInputModalDeleteConfirmation from './VMainContentVideoListInputModalDeleteConfirmation';
+import VRecoveryVideoListInputModalDeleteConfirmation from './VRecoveryVideoListInputModalDeleteConfirmation';
 import { required } from 'vuelidate/lib/validators';
 import { commaSeparatedListOfUrlsOrVideoIds } from '../services/form-validator.service';
 
@@ -81,7 +81,7 @@ export default {
         },
     },
     components: {
-        VMainContentVideoListInputModalDeleteConfirmation,
+        VRecoveryVideoListInputModalDeleteConfirmation,
     },
     methods: {
         checkVideos: function() {
