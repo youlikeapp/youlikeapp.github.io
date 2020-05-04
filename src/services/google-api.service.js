@@ -27,7 +27,6 @@ function signIn() {
     return new Promise((resolve, reject) => {
         authInstance.signIn().then(
             ({ Pt }) => {
-                debugger;
                 const { Ad: name, fL: image } = Pt;
                 resolve({ name, image });
             },
