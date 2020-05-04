@@ -5,6 +5,11 @@
 url to gh pages:
 <https://ragtam.github.io/youlikeapp.github.io>
 
+original
+
+-   app: https://youlikeapp.github.io/#/
+-   repo: https://github.com/youlikeapp/youlikeapp.github.io
+
 ### Vue style guide notes:
 
 -   Presentational components begin with V prefix: VButton

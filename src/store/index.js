@@ -115,9 +115,11 @@ const actions = {
         });
     },
     [type.RECOVER_VIDEOS]({ commit }, { videosToRecover }) {
-        youtubeRatingService.setRating(videosToRecover, 'like', function(result) {
-            commit(type.RECOVER_VIDEOS, result || []);
-        });
+        commit(type.RECOVER_VIDEOS, 'dupa' || []);
+
+        // youtubeRatingService.setRating(videosToRecover, 'like', function(result) {
+        //     commit(type.RECOVER_VIDEOS, result || []);
+        // });
     },
 };
 
