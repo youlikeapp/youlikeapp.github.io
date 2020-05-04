@@ -47,6 +47,13 @@ const mutations = {
     [type.SAVE_VIDEOS](state, savedVideos) {
         state.savedVideos = savedVideos;
     },
+    [type.RECOVER_VIDEOS](state, recoveredVideos) {
+        debugger;
+        state.recoveredVideos = {
+            successfull: ['abcdefghi', 'xyz'],
+            failed: [],
+        };
+    },
 };
 
 const actions = {
@@ -105,6 +112,11 @@ const actions = {
     [type.REMOVE_VIDEOS]({ commit }) {
         storageService.remove(videosStorageKey).then(result => {
             commit(type.REMOVE_VIDEOS, result || []);
+        });
+    },
+    [type.RECOVER_VIDEOS]({ commit }, { videosToRecover }) {
+        youtubeRatingService.setRating(videosToRecover, 'like', function(result) {
+            commit(type.RECOVER_VIDEOS, result || []);
         });
     },
 };

@@ -32,6 +32,8 @@
 <script>
 import VMainContentCheckingSummaryWithoutLikes from './VMainContentCheckingSummaryWithoutLikes';
 
+const customEvents = { recoverVideos: 'recover-videos' };
+
 export default {
     data: function() {
         return {
@@ -82,7 +84,8 @@ export default {
     },
     methods: {
         recoverLikes: function() {
-            console.log('recover likes btn');
+            const videoIds = this.videosWithoutLikes.map(v => v.url);
+            this.$emit(customEvents.recoverVideos, videoIds);
         },
     },
 };

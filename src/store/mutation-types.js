@@ -6,3 +6,4 @@ export const CHECK_VIDEOS = 'CHECK_VIDEOS';
 export const GET_SAVED_VIDEOS = 'GET_SAVED_VIDEOS';
 export const SAVE_VIDEOS = 'SAVE_VIDEOS';
 export const REMOVE_VIDEOS = 'REMOVE_VIDEOS';
+export const RECOVER_VIDEOS = 'RECOVER_VIDEOS';

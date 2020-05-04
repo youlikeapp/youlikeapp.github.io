@@ -26,8 +26,9 @@ function setUpAuthInstance() {
 function signIn() {
     return new Promise((resolve, reject) => {
         authInstance.signIn().then(
-            ({ Qt }) => {
-                const { Ad: name, jL: image } = Qt;
+            ({ Pt }) => {
+                debugger;
+                const { Ad: name, fL: image } = Pt;
                 resolve({ name, image });
             },
             () => {

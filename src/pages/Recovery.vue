@@ -1,8 +1,21 @@
 <template>
     <div class="q-pa-xl">
-        <v-recovery-video-list-input v-bind:videos="videos" @check-videos="checkVideos($event)" @save-list="saveList" @load-list="loadList()" @remove-videos="removeVideos" />
-        <v-recovery-checking-summary v-bind:disabled="!areVideosChecked" v-bind:checkedVideos="checkedVideos" />
-        <v-recovery-page-recovery-summary v-bind:disabled="!areVideosRecovered" v-bind:recoveredVideos="recoveredVideos" />
+        <v-recovery-video-list-input
+            v-bind:videos="videos"
+            @check-videos="checkVideos($event)"
+            @save-list="saveList"
+            @load-list="loadList()"
+            @remove-videos="removeVideos"
+        />
+        <v-recovery-checking-summary
+            v-bind:disabled="!areVideosChecked"
+            v-bind:checkedVideos="checkedVideos"
+            @recover-videos="recoverVideos($event)"
+        />
+        <v-recovery-page-recovery-summary
+            v-bind:disabled="!areVideosRecovered"
+            v-bind:recoveredVideos="recoveredVideos"
+        />
     </div>
 </template>
 
@@ -11,7 +24,7 @@ import VRecoveryVideoListInput from '../components/VRecoveryVideoListInput';
 import VRecoveryCheckingSummary from '../components/VRecoveryCheckingSummary';
 import VRecoveryPageRecoverySummary from '../components/VRecoveryPageRecoverySummary';
 
-import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS } from '../store/mutation-types';
+import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS, RECOVER_VIDEOS } from '../store/mutation-types';
 
 export default {
     data: function() {
@@ -22,8 +35,8 @@ export default {
                 withoutLikes: [],
             },
             recoveredVideos: {
-                successfull: ['youtube.com.pl/1234', 'youtube.com.pl/acded', 'youtube.com.pl/vbsj'],
-                failed: ['youtube.com.pl/1234', 'youtube.com.pl/xyzas'],
+                successfull: [],
+                failed: [],
             },
         };
     },
@@ -43,6 +56,10 @@ export default {
                 case SAVE_VIDEOS:
                     this.videos = payload;
                     break;
+                case RECOVER_VIDEOS:
+                    debugger;
+                    this.recoveredVideos = payload;
+                    break;
             }
         });
 
@@ -60,6 +77,9 @@ export default {
         },
         removeVideos: function() {
             this.$store.dispatch({ type: REMOVE_VIDEOS });
+        },
+        recoverVideos: function(videosToRecover) {
+            this.$store.dispatch({ type: RECOVER_VIDEOS, videosToRecover });
         },
     },
     computed: {
