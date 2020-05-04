@@ -13,12 +13,11 @@ const gapiService = { name: 'youtube', version: 'v3' };
 function checkVideos(videos) {
     const videoIds = uniq(extractVideoIds(videos));
     const videoIdsChunksMatrix = split(videoIds).intoChunksOf(maxSizeOfGapiBatchRequest);
-    return gapi.client
-        .load(gapiService.name, gapiService.version)
+    return loadGapiClient()
         .then(() => {
             let promisesArray = [];
 
-            videoIdsChunksMatrix.forEach((videoIdsChunk) => {
+            videoIdsChunksMatrix.forEach(videoIdsChunk => {
                 console.log(videoIdsChunk);
                 let promise = gapi.client.youtube.videos.getRating({
                     id: videoIdsChunk.join(','),
@@ -30,7 +29,7 @@ function checkVideos(videos) {
             return Promise.all(promisesArray);
         })
         .then(
-            (responses) => {
+            responses => {
                 let withLikes = [];
                 let withoutLikes = [];
 
@@ -51,7 +50,7 @@ function checkVideos(videos) {
 
                 return { withLikes, withoutLikes };
             },
-            (data) => {
+            data => {
                 console.error('youtube-rating.service.js');
                 // toastr.error(`Не удалось проверить список видео.`);
 
@@ -61,44 +60,39 @@ function checkVideos(videos) {
 }
 
 function setRating(videoIds, rating, onSuccess, onError) {
-    return gapi.client.load('youtube', 'v3').then(() => {
-        let promisesArray = [];
-
-        videoIds.forEach((videoId, index) => {
-            let promise = gapi.client.youtube.videos
+    return loadGapiClient().then(() => {
+        const promisesArray = [];
+        const recoveredVideos = { successfull: [], failed: [] };
+        videoIds.forEach(videoId => {
+            const promise = gapi.client.youtube.videos
                 .rate({
                     id: videoId,
                     rating: rating,
                 })
                 .then(
                     () => {
-                        if (onSuccess) {
-                            onSuccess(videoId);
-                        }
+                        recoveredVideos.successfull.push(videoId);
                     },
-                    (data) => {
-                        // toastr.error(`Не удалось поставить лайк на видео с идентификатором ${videoId}. ${data.result.error.message}`);
-                        console.error(data);
-
-                        if (onError) {
-                            onError(videoId, data.result.error.message);
-                        }
+                    () => {
+                        recoveredVideos.failed.push(videoId);
                     }
                 );
-
             promisesArray.push(promise);
         });
-
-        return Promise.all(promisesArray);
+        return Promise.all(promisesArray).then(() => Promise.resolve(recoveredVideos));
     });
 }
 
+function loadGapiClient() {
+    return gapi.client.load(gapiService.name, gapiService.version);
+}
+
 function extractVideoIds(videos) {
-    return videos.map((videoUrl) => (validator.isURL(videoUrl) ? youtubeUrlParserService.getVideoId(videoUrl) : videoUrl));
+    return videos.map(videoUrl => (validator.isURL(videoUrl) ? youtubeUrlParserService.getVideoId(videoUrl) : videoUrl));
 }
 
 function split(arrayToSplit) {
-    return { intoChunksOf: (chunkSize) => _.chunk(arrayToSplit, chunkSize) };
+    return { intoChunksOf: chunkSize => _.chunk(arrayToSplit, chunkSize) };
 }
 
 const youtubeRatingService = publicApi;

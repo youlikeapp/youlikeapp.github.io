@@ -57,7 +57,6 @@ export default {
                     this.videos = payload;
                     break;
                 case RECOVER_VIDEOS:
-                    debugger;
                     this.recoveredVideos = payload;
                     break;
             }

@@ -48,11 +48,7 @@ const mutations = {
         state.savedVideos = savedVideos;
     },
     [type.RECOVER_VIDEOS](state, recoveredVideos) {
-        debugger;
-        state.recoveredVideos = {
-            successfull: ['abcdefghi', 'xyz'],
-            failed: [],
-        };
+        state.recoveredVideos = recoveredVideos;
     },
 };
 
@@ -115,11 +111,9 @@ const actions = {
         });
     },
     [type.RECOVER_VIDEOS]({ commit }, { videosToRecover }) {
-        commit(type.RECOVER_VIDEOS, 'dupa' || []);
-
-        // youtubeRatingService.setRating(videosToRecover, 'like', function(result) {
-        //     commit(type.RECOVER_VIDEOS, result || []);
-        // });
+        youtubeRatingService.setRating(videosToRecover, 'like').then(result => {
+            commit(type.RECOVER_VIDEOS, result || []);
+        });
     },
 };
 
