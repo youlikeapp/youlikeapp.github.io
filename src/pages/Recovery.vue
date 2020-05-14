@@ -1,5 +1,10 @@
 <template>
     <div class="q-pa-xl">
+        <v-toaster
+            v-model="dialog.isVisible"
+            v-bind:message="dialog.message"
+            v-bind:backgroundClass="dialog.backgroundClass"
+        />
         <v-recovery-video-list-input
             v-bind:videos="videos"
             @check-videos="checkVideos($event)"
@@ -16,6 +21,7 @@
             v-bind:disabled="!areVideosRecovered"
             v-bind:recoveredVideos="recoveredVideos"
         />
+        <button @click="openDialog()">Dialog</button>
     </div>
 </template>
 
@@ -23,6 +29,7 @@
 import VRecoveryVideoListInput from '../components/VRecoveryVideoListInput';
 import VRecoveryCheckingSummary from '../components/VRecoveryCheckingSummary';
 import VRecoveryPageRecoverySummary from '../components/VRecoveryPageRecoverySummary';
+import VToaster from '../components/VToaster';
 
 import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS, RECOVER_VIDEOS } from '../store/mutation-types';
 
@@ -38,12 +45,19 @@ export default {
                 successfull: [],
                 failed: [],
             },
+            dialog: {
+                isVisible: false,
+                message: '',
+                backgroundClass: 'bg-secondary',
+                dismissSchedule: null,
+            },
         };
     },
     components: {
         VRecoveryVideoListInput,
         VRecoveryCheckingSummary,
         VRecoveryPageRecoverySummary,
+        VToaster,
     },
     mounted() {
         this.$store.subscribe(({ type, payload }) => {
@@ -65,6 +79,19 @@ export default {
         this.$store.dispatch(GET_SAVED_VIDEOS);
     },
     methods: {
+        openDialog() {
+            const { message, cssClass } = this.recoverySummary();
+            this.dialog.message = message;
+            this.dialog.backgroundClass = cssClass;
+            if (this.dialog.dismissSchedule) {
+                clearTimeout(this.dialog.dismissSchedule);
+            }
+            this.dialog.dismissSchedule = setTimeout(() => {
+                this.dialog.isVisible = false;
+                this.dialog.message = '';
+            }, 2000);
+            this.dialog.isVisible = true;
+        },
         checkVideos: function(videosToCheck) {
             this.$store.dispatch({ type: CHECK_VIDEOS, videosToCheck });
         },
@@ -79,6 +106,16 @@ export default {
         },
         recoverVideos: function(videosToRecover) {
             this.$store.dispatch({ type: RECOVER_VIDEOS, videosToRecover });
+        },
+        recoverySummary: function() {
+            const { failed, successfull } = this.recoveredVideos;
+            if (failed > 0 && successfull === 0) {
+                return { message: 'Sorry! None of the videos were recovered', cssClass: 'bg-red' };
+            } else if (successfull > 0 && failed === 0) {
+                return { message: 'Success! All of the videos were recovered', cssClass: 'bg-teal' };
+            } else {
+                return { message: 'Only some of the videos were recovered', cssClass: 'bg-purple' };
+            }
         },
     },
     computed: {

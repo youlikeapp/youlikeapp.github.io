@@ -10,6 +10,8 @@ original
 -   app: https://youlikeapp.github.io/#/
 -   repo: https://github.com/youlikeapp/youlikeapp.github.io
 
+-   https://undraw.co/illustrations
+
 ### Vue style guide notes:
 
 -   Presentational components begin with V prefix: VButton
