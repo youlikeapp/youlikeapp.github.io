@@ -27,8 +27,7 @@ export default {
         value: function() {
             this.isVisible = this.value;
         },
-    },
-    computed: {},
+    }
 };
 </script>
 

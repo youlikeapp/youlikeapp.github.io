@@ -33,6 +33,23 @@ import VToaster from '../components/VToaster';
 
 import { CHECK_VIDEOS, GET_SAVED_VIDEOS, SAVE_VIDEOS, REMOVE_VIDEOS, RECOVER_VIDEOS } from '../store/mutation-types';
 
+const recoveryMessages = new Map([
+    ['failure', { message: 'Sorry! None of the videos were recovered', cssClass: 'bg-red' }],
+    ['success', { message: 'Success! All of the videos were recovered', cssClass: 'bg-teal' }],
+    ['semi-success', { message: 'Only some of the videos were recovered', cssClass: 'bg-purple' }],
+]);
+
+function typeOfRecoveryMessage(recoveredVideos) {
+    const { failed, successfull } = recoveredVideos;
+    if (failed > 0 && successfull === 0) {
+        return 'failure';
+    } else if (successfull > 0 && failed === 0) {
+        return 'success';
+    } else {
+        return 'semi-success';
+    }
+}
+
 export default {
     data: function() {
         return {
@@ -108,14 +125,7 @@ export default {
             this.$store.dispatch({ type: RECOVER_VIDEOS, videosToRecover });
         },
         recoverySummary: function() {
-            const { failed, successfull } = this.recoveredVideos;
-            if (failed > 0 && successfull === 0) {
-                return { message: 'Sorry! None of the videos were recovered', cssClass: 'bg-red' };
-            } else if (successfull > 0 && failed === 0) {
-                return { message: 'Success! All of the videos were recovered', cssClass: 'bg-teal' };
-            } else {
-                return { message: 'Only some of the videos were recovered', cssClass: 'bg-purple' };
-            }
+            return recoveryMessages.get(typeOfRecoveryMessage(this.recoveredVideos));
         },
     },
     computed: {
