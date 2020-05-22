@@ -1,75 +1,52 @@
 {
-  "name": "youlikeapp",
-  "version": "1.4.2",
-  "author": {
-    "name": "Plastiquewind"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/youlikeapp/youlikeapp.github.io"
-  },
-  "scripts": {
-    "build": "rimraf dist && webpack --bail --progress --profile --NODE_ENV=production",
-    "server": "webpack-dev-server --history-api-fallback --inline --hot --progress --NODE_ENV=dev",
-    "start": "npm run server"
-  },
-  "devDependencies": {
-    "@types/angular": "1.5.16",
-    "@types/angular-animate": "1.5.5",
-    "@types/angular-block-ui": "^0.2.3",
-    "@types/angular-cookies": "1.4.2",
-    "@types/angular-material": "1.1.39",
-    "@types/angular-resource": "1.5.6",
-    "@types/es6-promise": "0.0.32",
-    "@types/gapi.auth2": "0.0.46",
-    "@types/gapi.client.youtube": "^3.0.0",
-    "@types/jquery": "^2.0.48",
-    "@types/lodash": "^4.14.100",
-    "@types/query-string": "^5.0.1",
-    "@types/toastr": "^2.1.35",
-    "@types/validator": "^6.3.0",
-    "autoprefixer": "6.4.1",
-    "awesome-typescript-loader": "3.0.0-beta.13",
-    "connect-history-api-fallback": "1.3.0",
-    "css-loader": "0.25.0",
-    "extract-text-webpack-plugin": "1.0.1",
-    "file-loader": "0.9.0",
-    "html-webpack-plugin": "2.22.0",
-    "ng-annotate-loader": "0.1.1",
-    "node-sass": "4.5.3",
-    "postcss-loader": "0.13.0",
-    "raw-loader": "0.5.1",
-    "require-dir": "~0.3.0",
-    "rimraf": "2.5.4",
-    "sass-loader": "4.0.2",
-    "style-loader": "0.13.1",
-    "typescript": "~2.6.2",
-    "webpack": "1.13.2",
-    "webpack-dev-server": "1.15.1",
-    "webpack-stream": "3.2.0"
-  },
-  "engines": {
-    "node": ">=4.0.0"
-  },
-  "dependencies": {
-    "angular": "1.5.8",
-    "angular-animate": "1.5.8",
-    "angular-aria": "1.5.8",
-    "angular-block-ui": "^0.2.2",
-    "angular-cookies": "1.5.8",
-    "angular-material": "1.1.1",
-    "angular-messages": "1.5.8",
-    "angular-resource": "1.5.8",
-    "angular-sanitize": "1.5.8",
-    "angular-socialshare": "^2.3.11",
-    "angular-ui-router": "1.0.0-beta.3",
-    "lodash": "^4.17.4",
-    "md-collection-pagination": "^1.0.3",
-    "moment": "^2.20.1",
-    "query-string": "^5.0.1",
-    "toastr": "^2.1.4",
-    "ts-md5": "^1.2.3",
-    "validator": "^9.2.0"
-  }
+    "name": "youlikeapp",
+    "version": "0.0.1",
+    "description": "YouLike App",
+    "productName": "YouLike",
+    "cordovaId": "org.cordova.quasar.app",
+    "capacitorId": "",
+    "author": "ragtam <mag190033@gmail.com>",
+    "private": true,
+    "scripts": {
+        "serve": "quasar dev",
+        "lint": "eslint --ext .js,.vue src",
+        "test": "quasar test --unit jest",
+        "build": "quasar build --debug"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.27",
+        "@fortawesome/free-brands-svg-icons": "^5.12.1",
+        "@fortawesome/free-solid-svg-icons": "^5.12.1",
+        "@fortawesome/vue-fontawesome": "^0.1.9",
+        "@quasar/extras": "^1.0.0",
+        "lodash": "^4.17.15",
+        "quasar": "^1.0.0",
+        "query-string": "^6.11.1",
+        "validator": "^13.0.0",
+        "vue-i18n": "^8.0.0",
+        "vue-social-sharing": "^2.4.7",
+        "vuelidate": "^0.7.5"
+    },
+    "devDependencies": {
+        "@quasar/app": "^1.0.0",
+        "@quasar/quasar-app-extension-testing": "^1.0.0",
+        "@quasar/quasar-app-extension-testing-unit-jest": "^1.0.0",
+        "babel-eslint": "^10.0.1",
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^4.0.0",
+        "eslint-loader": "^3.0.3",
+        "eslint-plugin-vue": "^6.1.2",
+        "vue-plugin-load-script": "^1.2.0"
+    },
+    "engines": {
+        "node": ">= 10.18.1",
+        "npm": ">= 6.13.4",
+        "yarn": ">= 1.21.1"
+    },
+    "browserslist": [
+        "last 1 version, not dead, ie >= 11"
+    ],
+    "resolutions": {
+        "@babel/parser": "7.7.5"
+    }
 }

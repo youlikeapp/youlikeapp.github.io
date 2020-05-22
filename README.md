@@ -1,42 +1,39 @@
-# О проекте
+# Youlike web app
 
-~~Здравствуй, дорогой друг!~~
+[![Build Status](https://travis-ci.org/ragtam/youlikeapp.github.io.svg?branch=master)](https://travis-ci.org/ragtam/youlikeapp.github.io)
 
-~~Не здороваюсь.~~
+url to gh pages:
+<https://ragtam.github.io/youlikeapp.github.io>
 
-~~Привет, дорогой россиянин!~~
+original
 
-~~Мур-мур-мур, котятки. :3~~	
+-   app: https://youlikeapp.github.io/#/
+-   repo: https://github.com/youlikeapp/youlikeapp.github.io
 
-Оригинальное приветствие я так и не придумал, поэтому просто здравствуйте.
+-   https://undraw.co/illustrations
 
-## Коротко о сути
+### Vue style guide notes:
 
-Возможно, вам уже доводилось слышать о том, что на YouTube пропадают лайки с видео.
-Лично мне доподлинно неизвестно, существует ли проблема на самом деле. 
-Чтобы в этом убедиться (а заодно и людям помочь), я создал этот небольшой проект,
-позволяющий проверить наличие лайков на указанных видео и восстановить их.
+-   Presentational components begin with V prefix: VButton
 
-## Коротко о планах
+-   Components that should only ever have a single active instance should begin with the The prefix, to denote that there can be only one.
 
-Сейчас доступен минимальный необходимый функционал, но если в дальнейшем развитии
-будет заинтересована достаточно большая группа людей, то я планирую как минимум решить вопрос с квотой на запросы к YouTube Data API (либо попробовать реализовать альтернативный способ восстановления лайков без его использования).
+-   Child components that are tightly coupled with their parent should include the parent component name as a prefix.
 
-## О том, как можно помочь
+-   Component names should start with the highest-level (often most general) words and end with descriptive modifying words.
 
-#### Способ первый. Easy.
+-   Prop names should always use camelCase during declaration, but kebab-case in templates and JSX.
 
-Вы можете поделиться ссылкой на этот проект в соцсетях.
+-   Directive shorthands (: for v-bind:, @ for v-on: and # for v-slot) should be used always or never.
 
-#### Способ второй. Medium.
+### git
 
-Вы можете сообщать о проблемах и пожеланиях на этот ящик: [youlikeapp@gmail.com](mailto:youlikeapp@gmail.com)
+git checkout <feature_branch>
+git branch
+git remote show origin
 
-#### Способ третий. Hard.
+### quasar
 
-Исходники проекта находятся на GitHub, поэтому любой желающий
-может попробовать модифицировать его и сделать пулл-реквест.
-И да, там же можно писать о проблемах/пожеланиях, если не пугает
-буржуйский язык. =)
+adding plugins
 
-Ссылка на репозиторий расширения для Google Chrome: [https://github.com/Plastiquewind/youlike-chrome-extension](https://github.com/Plastiquewind/youlike-chrome-extension).
+-   quasar new boot fontawesome-pro
